@@ -79,6 +79,43 @@ struct ContentView: View {
             print("ContentView: View appeared, setting up event monitoring")
             setupEventMonitoring()
         }
+        .onChange(of: bleService.isPoweredOn) { isPoweredOn in
+            if isPoweredOn {
+                print("ContentView: Bluetooth powered on, starting automatic scanning")
+                startAutomaticScanning()
+            }
+        }
+        .onChange(of: bleService.discoveredDevices) { _ in
+            handleNewDeviceDiscovery()
+        }
+        .onChange(of: bleService.isConnected) { isConnected in
+            if !isConnected {
+                // Resume scanning when disconnected, but only if Bluetooth is powered on
+                if bleService.isPoweredOn {
+                    bleService.startScanning()
+                }
+            }
+        }
+    }
+    
+    private func startAutomaticScanning() {
+        guard bleService.isPoweredOn else {
+            print("ContentView: Bluetooth not powered on, waiting before starting scan")
+            return
+        }
+        print("ContentView: Starting automatic scanning")
+        bleService.startScanning()
+    }
+    
+    private func handleNewDeviceDiscovery() {
+        guard !bleService.isConnected else { return }
+        
+        // Connect to the first discovered device
+        if let firstDevice = bleService.discoveredDevices.first {
+            print("ContentView: Auto-connecting to discovered device: \(firstDevice.name ?? "Unknown")")
+            bleService.connect(to: firstDevice)
+            bleService.stopScanning()
+        }
     }
     
     private func setupEventMonitoring() {
