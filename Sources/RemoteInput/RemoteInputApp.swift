@@ -1,0 +1,39 @@
+// https://github.com/sean-escaped/TakaKeyboard
+// https://gist.github.com/conath/c606d95d58bbcb50e9715864eeeecf07
+
+// modify contentview to automatically start scanning on startup and connect to device when it is discovered, stop scannng if connection is successful, resume scanning when device is disconnected 
+
+// Keyboard, Mouse input -> this macOS App -> Bluetooth low-energy -> ESP32 -> USB HID -> Other computer
+
+import SwiftUI
+import AppKit
+
+@main
+struct RemoteInputApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    init() {
+        print("RemoteInputApp: Initializing app")
+    }
+    
+    var body: some Scene {
+        print("RemoteInputApp: Creating window scene")
+        return WindowGroup {
+            ContentView()
+                .frame(minWidth: 400, minHeight: 300)
+                .onAppear {
+                    print("RemoteInputApp: ContentView appeared")
+                }
+                .onDisappear {
+                    NSApplication.shared.terminate(nil)
+                }
+        }
+        .windowStyle(.hiddenTitleBar)   
+    }
+}
+
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.regular)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+}
