@@ -2,7 +2,19 @@ import Foundation
 
 // Converted from usb_hid_keys.h, see https://gist.github.com/MightyPork/6da26e382a7ad91b5496ee55fdc73db2
 
+enum HIDModifierFlags {
+    static let LeftCtrl: UInt8 = 0x01
+    static let LeftShift: UInt8 = 0x02
+    static let LeftAlt: UInt8 = 0x04
+    static let LeftMeta: UInt8 = 0x08
+    static let RightCtrl: UInt8 = 0x10
+    static let RightShift: UInt8 = 0x20
+    static let RightAlt: UInt8 = 0x40
+    static let RightMeta: UInt8 = 0x80
+} 
+
 enum HIDKeyCodes {
+    
     // Letters
     static let A: UInt8 = 0x04
     static let B: UInt8 = 0x05

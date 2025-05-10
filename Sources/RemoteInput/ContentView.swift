@@ -134,27 +134,46 @@ struct ContentView: View {
             handleMouseEvent(event)
             return event
         }
+
+        NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { event in
+            handleModifierEvent(event)
+            return event
+        }
+    }
+    
+    private func handleModifierEvent(_ event: NSEvent) {
+        print("ContentView: Handling modifier event: \(event.type), modifierFlags: \(event.modifierFlags.rawValue)")
+
+        let modifierMask = KeyMapping.getModifierMask(from: event.modifierFlags)
+        print("ContentView: Modifier mask: \(modifierMask)")
+
+        reportKeyboardEvent(event.modifierFlags, nil)
     }
     
     private func handleKeyboardEvent(_ event: NSEvent) {
         print("ContentView: Handling keyboard event: \(event.type), keycode: \(event.keyCode), modifierFlags: \(event.modifierFlags.rawValue)")
-        
-        let modifierFlags = event.modifierFlags.rawValue
-        let keyCode = Int(event.keyCode)
-        
+
+        reportKeyboardEvent(event.modifierFlags, Int(event.keyCode))
+    }
+
+    private func reportKeyboardEvent(_ modifierFlags: NSEvent.ModifierFlags, _ keyCode: Int?) {
+        let modifierMask = KeyMapping.getModifierMask(from: modifierFlags)
+
         var report: [UInt8] = [0, 0, 0, 0, 0, 0, 0, 0]
         
-        report[0] = UInt8(modifierFlags & 0xFF)
-        if event.type == .keyDown {
-            if let usbKeyCode = KeyCodeMapping.map[keyCode] {
+        report[0] = modifierMask
+        if let keyCode = keyCode {
+            if let usbKeyCode = KeyMapping.getKeyCode(from: keyCode) {
                 report[2] = usbKeyCode
-                print("Usb key code: \(usbKeyCode)")
+                print("ContentView: Usb key code: \(usbKeyCode)")
+            }
+            else {
+                print("ContentView: No usb key code found for keycode: \(keyCode)")
             }
         }
-        
         bleService.sendKeyboardReport(report)
     }
-    
+
     private func handleMouseEvent(_ event: NSEvent) {
         print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
         

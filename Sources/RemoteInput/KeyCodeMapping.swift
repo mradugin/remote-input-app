@@ -1,6 +1,7 @@
 import Carbon.HIToolbox.Events
+import AppKit
 
-struct KeyCodeMapping {
+struct KeyMapping {
     static let map: [Int: UInt8] = [
         // Letters
         kVK_ANSI_A: HIDKeyCodes.A,
@@ -91,4 +92,27 @@ struct KeyCodeMapping {
         kVK_Option: HIDKeyCodes.LeftAlt,
         kVK_Command: HIDKeyCodes.LeftMeta,
     ]
+
+    static func getKeyCode(from keyCode: Int) -> UInt8? {
+        return map[keyCode]
+    }
+    
+    static func getModifierMask(from flags: NSEvent.ModifierFlags) -> UInt8 {
+        var mask: UInt8 = 0
+        if flags.contains(.control) {
+            mask |= HIDModifierFlags.LeftCtrl
+        }
+        if flags.contains(.shift) {
+            mask |= HIDModifierFlags.LeftShift
+        }
+        if flags.contains(.option) {
+            mask |= HIDModifierFlags.LeftAlt
+        }
+        if flags.contains(.command) {
+            mask |= HIDModifierFlags.LeftMeta
+        }
+        return mask
+    }
 } 
+
+
