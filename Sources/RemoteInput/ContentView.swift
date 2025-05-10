@@ -10,71 +10,37 @@ struct ContentView: View {
     
     var body: some View {
         print("ContentView: Building view body")
-        return VStack {
+        return VStack(spacing: 20) {
             Text("Remote Input")
                 .font(.title)
                 .padding()
             
-            HStack {
-                Text("Bluetooth Status:")
-                Text(bleService.isPoweredOn ? "Powered On" : "Powered Off")
-                    .foregroundColor(bleService.isPoweredOn ? .green : .red)
-            }
-            
-            HStack {
-                Text("Scanning Status:")
-                Text(bleService.isScanning ? "Scanning" : "Not Scanning")
-                    .foregroundColor(bleService.isScanning ? .green : .red)
-            }
-            
-            HStack {
-                Text("Connection Status:")
-                Text(bleService.isConnected ? "Connected" : "Disconnected")
-                    .foregroundColor(bleService.isConnected ? .green : .red)
-            }
-            
-            List(bleService.discoveredDevices, id: \.identifier) { peripheral in
+            VStack(spacing: 10) {
                 HStack {
-                    Text(peripheral.name ?? "Unknown Device")
-                    Spacer()
-                    if bleService.isConnected && bleService.connectedPeripheral?.identifier == peripheral.identifier {
+                    Text("Status:")
+                    if bleService.isConnected {
                         Text("Connected")
                             .foregroundColor(.green)
+                    } else if !bleService.isPoweredOn {
+                        Text("Bluetooth Off")
+                            .foregroundColor(.red)
+                    } else if bleService.isScanning {
+                        Text("Scanning...")
+                            .foregroundColor(.gray)
+                    } else if bleService.isConnecting {
+                        Text("Connecting...")
+                            .foregroundColor(.orange)
                     } else {
-                        Button("Connect") {
-                            bleService.connect(to: peripheral)
-                        }
-                        .disabled(bleService.isConnected)
-                    }
-                }
-            }
-            .frame(height: 150)
-            
-            HStack {
-                Button(action: {
-                    print("ContentView: Scan button pressed")
-                    if bleService.isScanning {
-                        bleService.stopScanning()
-                    } else {
-                        bleService.startScanning()
-                    }
-                }) {
-                    Text(bleService.isScanning ? "Stop Scanning" : "Start Scanning")
-                }
-                
-                if bleService.isConnected {
-                    Button(action: {
-                        print("ContentView: Disconnect button pressed")
-                        bleService.disconnect()
-                    }) {
-                        Text("Disconnect")
+                        Text("Disconnected")
+                            .foregroundColor(.red)
                     }
                 }
             }
             .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(10)
         }
-        .frame(width: 400, height: 400)
-        .background(Color.gray.opacity(0.1))
+        .frame(width: 300, height: 200)
         .onAppear {
             print("ContentView: View appeared, setting up event monitoring")
             setupEventMonitoring()
@@ -82,29 +48,23 @@ struct ContentView: View {
         .onChange(of: bleService.isPoweredOn) { isPoweredOn in
             if isPoweredOn {
                 print("ContentView: Bluetooth powered on, starting automatic scanning")
-                startAutomaticScanning()
+                bleService.startScanning()
             }
         }
         .onChange(of: bleService.discoveredDevices) { _ in
             handleNewDeviceDiscovery()
         }
         .onChange(of: bleService.isConnected) { isConnected in
-            if !isConnected {
-                // Resume scanning when disconnected, but only if Bluetooth is powered on
-                if bleService.isPoweredOn {
+            if isConnected {
+                bleService.stopScanning()
+            }
+            else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    print("ContentView: Disconnected, starting automatic scanning")
                     bleService.startScanning()
                 }
             }
         }
-    }
-    
-    private func startAutomaticScanning() {
-        guard bleService.isPoweredOn else {
-            print("ContentView: Bluetooth not powered on, waiting before starting scan")
-            return
-        }
-        print("ContentView: Starting automatic scanning")
-        bleService.startScanning()
     }
     
     private func handleNewDeviceDiscovery() {

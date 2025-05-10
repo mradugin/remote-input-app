@@ -21,6 +21,7 @@ class BLEService: NSObject, ObservableObject {
     @Published var isPoweredOn = false
     @Published var discoveredDevices: [CBPeripheral] = []
     @Published var isConnected = false
+    @Published var isConnecting = false
     
     override init() {
         super.init()
@@ -64,6 +65,7 @@ class BLEService: NSObject, ObservableObject {
     
     func connect(to peripheral: CBPeripheral) {
         print("BLEService: Connecting to peripheral: \(peripheral.identifier)")
+        isConnecting = true
         centralManager.connect(peripheral)
     }
     
@@ -110,6 +112,7 @@ extension BLEService: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("BLEService: Connected to peripheral: \(peripheral.identifier)")
         connectedPeripheral = peripheral
+        isConnecting = false
         isConnected = true
         peripheral.delegate = self
 
@@ -129,6 +132,7 @@ extension BLEService: CBCentralManagerDelegate {
         if let error = error {
             print("BLEService: Error: \(error.localizedDescription)")
         }
+        isConnecting = false
     }
 }
 
