@@ -80,9 +80,15 @@ struct ContentView: View {
     
     private func setupEventMonitoring() {
         print("ContentView: Setting up event monitoring")
+
+        NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { event in
+            handleModifierEvent(event)
+            return event
+        }
+
         NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .keyUp]) { event in
             handleKeyboardEvent(event)
-            return event
+            return nil  // Return nil to prevent system bell sound
         }
         
         NSEvent.addLocalMonitorForEvents(matching: [
@@ -95,10 +101,6 @@ struct ContentView: View {
             return event
         }
 
-        NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { event in
-            handleModifierEvent(event)
-            return event
-        }
     }
     
     private func handleModifierEvent(_ event: NSEvent) {
