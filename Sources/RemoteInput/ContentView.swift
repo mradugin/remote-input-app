@@ -3,7 +3,6 @@ import AppKit
 
 struct ContentView: View {
     @StateObject private var bleService = BLEService()
-    @State private var lastMousePosition: NSPoint = .zero
     
     init() {
         print("ContentView: Initializing view")
@@ -89,7 +88,12 @@ struct ContentView: View {
             return event
         }
         
-        NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved, .leftMouseDown, .leftMouseUp, .rightMouseDown, .rightMouseUp]) { event in
+        NSEvent.addLocalMonitorForEvents(matching: [
+                .mouseMoved, 
+                .leftMouseDown, .leftMouseUp, 
+                .rightMouseDown, .rightMouseUp, 
+                .leftMouseDragged, .rightMouseDragged,
+                .scrollWheel]) { event in
             handleMouseEvent(event)
             return event
         }
@@ -101,13 +105,9 @@ struct ContentView: View {
         let modifierFlags = event.modifierFlags.rawValue
         let keyCode = event.keyCode
         
-        // Create keyboard report
         var report: [UInt8] = [0, 0, 0, 0, 0, 0, 0, 0]
         
-        // Set modifier keys
         report[0] = UInt8(modifierFlags & 0xFF)
-        
-        // Set key code
         if event.type == .keyDown {
             report[2] = UInt8(keyCode)
         }
@@ -116,29 +116,29 @@ struct ContentView: View {
     }
     
     private func handleMouseEvent(_ event: NSEvent) {
-        print("ContentView: Handling mouse event: \(event.type), dx: \(event.deltaX), dy: \(event.deltaY)")
-        
-        let currentPosition = event.locationInWindow
+        print("ContentView: Handling mouse event: \(event.type), dx: \(event.deltaX), dy: \(event.deltaY),")
         
         // Clamp delta values to Int8 range (-128 to 127)
-        let deltaX = Int8(max(min(event.deltaX, 127), -128))
-        let deltaY = Int8(max(min(event.deltaY, 127), -128))
-        
-        // Create mouse report
-        var report: [UInt8] = [0, 0, 0, 0]
-        
-        // Set button states
-        if event.type == .leftMouseDown {
-            report[0] |= 0x01
-        } else if event.type == .rightMouseDown {
-            report[0] |= 0x02
+        var deltaX = Int8(max(min(event.deltaX, 127), -128))
+        var deltaY = Int8(max(min(event.deltaY, 127), -128))
+
+        var scrollDeltaY = Int8(0)
+        var scrollDeltaX = Int8(0)
+
+        if event.type == .scrollWheel {
+            scrollDeltaY = Int8(max(min(event.deltaX * 10, 127), -128))
+            scrollDeltaX = Int8(max(min(event.deltaY * 10, 127), -128))
+            deltaX = Int8(0)
+            deltaY = Int8(0)
         }
+
+        var report: [UInt8] = [0, 0, 0, 0, 0]
         
-        // Set movement
+        report[0] = UInt8(NSEvent.pressedMouseButtons)
         report[1] = UInt8(bitPattern: deltaX)
         report[2] = UInt8(bitPattern: deltaY)
+        report[3] = UInt8(bitPattern: scrollDeltaY)
+        report[4] = UInt8(bitPattern: scrollDeltaX)
         bleService.sendMouseReport(report)
-        
-        lastMousePosition = currentPosition
     }
 } 
