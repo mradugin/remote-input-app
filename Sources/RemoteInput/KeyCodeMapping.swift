@@ -98,18 +98,31 @@ struct KeyMapping {
     }
     
     static func getModifierMask(from flags: NSEvent.ModifierFlags) -> UInt8 {
+        let rawValue = flags.rawValue
         var mask: UInt8 = 0
-        if flags.contains(.control) {
-            mask |= HIDModifierFlags.LeftCtrl
-        }
-        if flags.contains(.shift) {
+        if rawValue & UInt(NX_DEVICELSHIFTKEYMASK) != 0 {
             mask |= HIDModifierFlags.LeftShift
         }
-        if flags.contains(.option) {
+        if rawValue & UInt(NX_DEVICERSHIFTKEYMASK) != 0 {
+            mask |= HIDModifierFlags.RightShift
+        }
+        if rawValue & UInt(NX_DEVICELALTKEYMASK) != 0 {
             mask |= HIDModifierFlags.LeftAlt
         }
-        if flags.contains(.command) {
+        if rawValue & UInt(NX_DEVICERALTKEYMASK) != 0 {
+            mask |= HIDModifierFlags.RightAlt
+        }
+        if rawValue & UInt(NX_DEVICELCTLKEYMASK) != 0 {
+            mask |= HIDModifierFlags.LeftCtrl
+        }
+        if rawValue & UInt(NX_DEVICERCTLKEYMASK) != 0 {
+            mask |= HIDModifierFlags.RightCtrl
+        }   
+        if rawValue & UInt(NX_DEVICELCMDKEYMASK) != 0 {
             mask |= HIDModifierFlags.LeftMeta
+        }
+        if rawValue & UInt(NX_DEVICERCMDKEYMASK) != 0 {
+            mask |= HIDModifierFlags.RightMeta
         }
         return mask
     }
