@@ -159,12 +159,12 @@ struct ContentView: View {
     private func reportKeyboardEvent(_ modifierFlags: NSEvent.ModifierFlags, _ keyCode: Int?) {
         let modifierMask = KeyMapping.getModifierMask(from: modifierFlags)
 
-        var report: [UInt8] = [0, 0, 0, 0, 0, 0, 0, 0]
+        var report: [UInt8] = [0, 0]
         
         report[0] = modifierMask
         if let keyCode = keyCode {
             if let usbKeyCode = KeyMapping.getKeyCode(from: keyCode) {
-                report[2] = usbKeyCode
+                report[1] = usbKeyCode
                 print("ContentView: Usb key code: \(usbKeyCode)")
             }
             else {
@@ -181,23 +181,20 @@ struct ContentView: View {
         var deltaX = Int8(max(min(event.deltaX, 127), -128))
         var deltaY = Int8(max(min(event.deltaY, 127), -128))
 
-        var scrollDeltaY = Int8(0)
-        var scrollDeltaX = Int8(0)
-
+        var report: [UInt8] = [0, 0, 0]
+        
         if event.type == .scrollWheel {
-            scrollDeltaY = Int8(max(min(event.deltaX * 10, 127), -128))
-            scrollDeltaX = Int8(max(min(event.deltaY * 10, 127), -128))
+            let wheelScroll = Int8(max(min(event.deltaY * 10, 127), -128))
+            let wheelPan = Int8(max(min(event.deltaX * 10, 127), -128))
             deltaX = Int8(0)
             deltaY = Int8(0)
+            report.append(UInt8(bitPattern: wheelScroll))
+            report.append(UInt8(bitPattern: wheelPan))
         }
 
-        var report: [UInt8] = [0, 0, 0, 0, 0]
-        
         report[0] = UInt8(NSEvent.pressedMouseButtons)
         report[1] = UInt8(bitPattern: deltaX)
         report[2] = UInt8(bitPattern: deltaY)
-        report[3] = UInt8(bitPattern: scrollDeltaY)
-        report[4] = UInt8(bitPattern: scrollDeltaX)
         bleService.sendMouseReport(report)
     }
 } 
