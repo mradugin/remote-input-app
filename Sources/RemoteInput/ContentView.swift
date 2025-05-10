@@ -137,23 +137,26 @@ struct ContentView: View {
     }
     
     private func handleKeyboardEvent(_ event: NSEvent) {
-        print("ContentView: Handling keyboard event: \(event.type)")
+        print("ContentView: Handling keyboard event: \(event.type), keycode: \(event.keyCode), modifierFlags: \(event.modifierFlags.rawValue)")
         
         let modifierFlags = event.modifierFlags.rawValue
-        let keyCode = event.keyCode
+        let keyCode = Int(event.keyCode)
         
         var report: [UInt8] = [0, 0, 0, 0, 0, 0, 0, 0]
         
         report[0] = UInt8(modifierFlags & 0xFF)
         if event.type == .keyDown {
-            report[2] = UInt8(keyCode)
+            if let usbKeyCode = KeyCodeMapping.map[keyCode] {
+                report[2] = usbKeyCode
+                print("Usb key code: \(usbKeyCode)")
+            }
         }
         
         bleService.sendKeyboardReport(report)
     }
     
     private func handleMouseEvent(_ event: NSEvent) {
-        print("ContentView: Handling mouse event: \(event.type), dx: \(event.deltaX), dy: \(event.deltaY),")
+        print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
         
         // Clamp delta values to Int8 range (-128 to 127)
         var deltaX = Int8(max(min(event.deltaX, 127), -128))
