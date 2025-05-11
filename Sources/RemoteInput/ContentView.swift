@@ -137,6 +137,15 @@ struct ContentView: View {
     }
 
     private func handleMouseEvent(_ event: NSEvent) {
+        // Check if mouse is within the current window
+        guard let window = NSApp.windows.first(where: { $0.isKeyWindow }) else {
+            return
+        }
+            
+        guard window.frame.contains(window.convertPoint(toScreen: event.locationInWindow)) else {
+            return
+        }
+
         print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
         
         // Clamp delta values to Int8 range (-128 to 127)
