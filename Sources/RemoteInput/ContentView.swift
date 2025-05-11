@@ -100,7 +100,6 @@ struct ContentView: View {
             handleMouseEvent(event)
             return event
         }
-
     }
     
     private func handleModifierEvent(_ event: NSEvent) {
@@ -121,9 +120,8 @@ struct ContentView: View {
     private func reportKeyboardEvent(_ modifierFlags: NSEvent.ModifierFlags, _ keyCode: Int?) {
         let modifierMask = KeyMapping.getModifierMask(from: modifierFlags)
 
-        var report: [UInt8] = [0, 0]
+        var report: [UInt8] = [modifierMask, 0]
         
-        report[0] = modifierMask
         if let keyCode = keyCode {
             if let usbKeyCode = KeyMapping.getKeyCode(from: keyCode) {
                 report[1] = usbKeyCode
@@ -153,7 +151,6 @@ struct ContentView: View {
         print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
         
         if event.type != .scrollWheel {
-            // Clamp delta values to Int8 range (-128 to 127)
             let deltaX = Int8(clamp(event.deltaX, min: -128, max: 127))
             let deltaY = Int8(clamp(event.deltaY, min: -128, max: 127))
 
