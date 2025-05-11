@@ -5,6 +5,7 @@
 // https://github.com/kingo132/BLEVirtualKeyboard
 // https://github.com/sean-escaped/TakaKeyboard
 // https://gist.github.com/conath/c606d95d58bbcb50e9715864eeeecf07
+// https://gist.github.com/MightyPork/6da26e382a7ad91b5496ee55fdc73db2
 
 import SwiftUI
 import AppKit
@@ -27,8 +28,12 @@ struct RemoteInputApp: App {
                 .onDisappear {
                     NSApplication.shared.terminate(nil)
                 }
+                //.edgesIgnoringSafeArea(.top)
         }
-        .windowStyle(.hiddenTitleBar)   
+        .windowStyle(.hiddenTitleBar)
+        .commands {
+            SidebarCommands()
+        }
     }
 }
 

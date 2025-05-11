@@ -2,7 +2,7 @@ import Carbon.HIToolbox.Events
 import AppKit
 
 struct KeyMapping {
-    static let map: [Int: UInt8] = [
+    static let keyCodeMap: [Int: UInt8] = [
         // Letters
         kVK_ANSI_A: HIDKeyCodes.A,
         kVK_ANSI_B: HIDKeyCodes.B,
@@ -93,10 +93,52 @@ struct KeyMapping {
         kVK_Command: HIDKeyCodes.LeftMeta,
     ]
 
-    static func getKeyCode(from keyCode: Int) -> UInt8? {
-        return map[keyCode]
+    // ASCII to HID key code mapping
+    static let asciiMap: [UInt8: UInt8] = [
+        // Letters
+        0x41: HIDKeyCodes.A, 0x42: HIDKeyCodes.B, 0x43: HIDKeyCodes.C, 0x44: HIDKeyCodes.D,
+        0x45: HIDKeyCodes.E, 0x46: HIDKeyCodes.F, 0x47: HIDKeyCodes.G, 0x48: HIDKeyCodes.H,
+        0x49: HIDKeyCodes.I, 0x4A: HIDKeyCodes.J, 0x4B: HIDKeyCodes.K, 0x4C: HIDKeyCodes.L,
+        0x4D: HIDKeyCodes.M, 0x4E: HIDKeyCodes.N, 0x4F: HIDKeyCodes.O, 0x50: HIDKeyCodes.P,
+        0x51: HIDKeyCodes.Q, 0x52: HIDKeyCodes.R, 0x53: HIDKeyCodes.S, 0x54: HIDKeyCodes.T,
+        0x55: HIDKeyCodes.U, 0x56: HIDKeyCodes.V, 0x57: HIDKeyCodes.W, 0x58: HIDKeyCodes.X,
+        0x59: HIDKeyCodes.Y, 0x5A: HIDKeyCodes.Z,
+        
+        // Numbers
+        0x30: HIDKeyCodes.Key0, 0x31: HIDKeyCodes.Key1, 0x32: HIDKeyCodes.Key2,
+        0x33: HIDKeyCodes.Key3, 0x34: HIDKeyCodes.Key4, 0x35: HIDKeyCodes.Key5,
+        0x36: HIDKeyCodes.Key6, 0x37: HIDKeyCodes.Key7, 0x38: HIDKeyCodes.Key8,
+        0x39: HIDKeyCodes.Key9,
+        
+        // Special characters
+        0x20: HIDKeyCodes.Space,
+        0x2D: HIDKeyCodes.Minus,
+        0x3D: HIDKeyCodes.Equal,
+        0x5B: HIDKeyCodes.LeftBracket,
+        0x5D: HIDKeyCodes.RightBracket,
+        0x5C: HIDKeyCodes.Backslash,
+        0x3B: HIDKeyCodes.Semicolon,
+        0x27: HIDKeyCodes.Apostrophe,
+        0x60: HIDKeyCodes.Grave,
+        0x2C: HIDKeyCodes.Comma,
+        0x2E: HIDKeyCodes.Dot,
+        0x2F: HIDKeyCodes.Slash,
+        
+        // Control characters
+        0x0A: HIDKeyCodes.Enter,  // Line feed
+        0x0D: HIDKeyCodes.Enter,  // Carriage return
+        0x09: HIDKeyCodes.Tab     // Tab
+    ]
+
+    static func getKeyCode(fromEvent keyCode: Int) -> UInt8? {
+        return keyCodeMap[keyCode]
     }
     
+    static func getKeyCode(formAscii char: UInt8) -> UInt8? {
+        return asciiMap[char]
+    }
+    
+
     static func getModifierMask(from flags: NSEvent.ModifierFlags) -> UInt8 {
         let rawValue = flags.rawValue
         var mask: UInt8 = 0
