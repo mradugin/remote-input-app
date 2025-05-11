@@ -1,9 +1,10 @@
+// Description of the setup:
+// Keyboard, Mouse input -> this macOS App -> Bluetooth low-energy -> ESP32 -> USB HID -> Other computer
+
+// Useful links:
+// https://github.com/kingo132/BLEVirtualKeyboard
 // https://github.com/sean-escaped/TakaKeyboard
 // https://gist.github.com/conath/c606d95d58bbcb50e9715864eeeecf07
-
-// modify contentview to automatically start scanning on startup and connect to device when it is discovered, stop scannng if connection is successful, resume scanning when device is disconnected 
-
-// Keyboard, Mouse input -> this macOS App -> Bluetooth low-energy -> ESP32 -> USB HID -> Other computer
 
 import SwiftUI
 import AppKit

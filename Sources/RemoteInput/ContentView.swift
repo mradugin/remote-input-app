@@ -10,7 +10,7 @@ struct ContentView: View {
     
     var body: some View {
         print("ContentView: Building view body")
-        return VStack(spacing: 20) {
+        return VStack(spacing: 5) {
             Text("Remote Input")
                 .font(.title)
                 .padding()
@@ -26,7 +26,7 @@ struct ContentView: View {
                             .foregroundColor(.red)
                     } else if bleService.isScanning {
                         Text("Scanning...")
-                            .foregroundColor(.gray)
+                            .foregroundColor(.yellow)
                     } else if bleService.isConnecting {
                         Text("Connecting...")
                             .foregroundColor(.orange)
@@ -34,6 +34,38 @@ struct ContentView: View {
                         Text("Disconnected")
                             .foregroundColor(.red)
                     }
+                }
+                
+                if bleService.isConnected {
+                    Text("All keyboard and mouse input within this window will be sent to the remote computer")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                } else if !bleService.isPoweredOn {
+                    Text("Please turn on Bluetooth to connect to the Remote Input Dongle")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                } else if bleService.isScanning {
+                    Text("Searching for Remote Input Dongle...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                } else if bleService.isConnecting {
+                    Text("Establishing connection to Remote Input Dongle...")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                } else {
+                    Text("Remote Input Dongle has been disconnected")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
                 }
             }
             .padding()
@@ -66,7 +98,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func handleNewDeviceDiscovery() {
         guard !bleService.isConnected else { return }
         
@@ -77,7 +109,7 @@ struct ContentView: View {
             bleService.stopScanning()
         }
     }
-    
+
     private func setupEventMonitoring() {
         print("ContentView: Setting up event monitoring")
 
