@@ -136,12 +136,16 @@ struct ContentView: View {
         bleService.sendKeyboardReport(report)
     }
 
+    private func clamp<T: Comparable>(_ value: T, min: T, max: T) -> T {
+        return Swift.max(min, Swift.min(max, value))
+    }
+
     private func handleMouseEvent(_ event: NSEvent) {
         // Check if mouse is within the current window
         guard let window = NSApp.windows.first(where: { $0.isKeyWindow }) else {
             return
         }
-            
+        
         guard window.frame.contains(window.convertPoint(toScreen: event.locationInWindow)) else {
             return
         }
@@ -149,14 +153,14 @@ struct ContentView: View {
         print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
         
         // Clamp delta values to Int8 range (-128 to 127)
-        var deltaX = Int8(max(min(event.deltaX, 127), -128))
-        var deltaY = Int8(max(min(event.deltaY, 127), -128))
+        var deltaX = Int8(clamp(event.deltaX, min: -128, max: 127))
+        var deltaY = Int8(clamp(event.deltaY, min: -128, max: 127))
 
         var report: [UInt8] = [0, 0, 0]
         
         if event.type == .scrollWheel {
-            let wheelScroll = Int8(max(min(event.deltaY * 10, 127), -128))
-            let wheelPan = Int8(max(min(event.deltaX * 10, 127), -128))
+            let wheelScroll = Int8(clamp(event.deltaY * 10, min: -128, max: 127))
+            let wheelPan = Int8(clamp(event.deltaX * 10, min: -128, max: 127))
             deltaX = Int8(0)
             deltaY = Int8(0)
             report.append(UInt8(bitPattern: wheelScroll))
