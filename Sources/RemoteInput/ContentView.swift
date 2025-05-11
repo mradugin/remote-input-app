@@ -152,24 +152,29 @@ struct ContentView: View {
 
         print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
         
-        // Clamp delta values to Int8 range (-128 to 127)
-        var deltaX = Int8(clamp(event.deltaX, min: -128, max: 127))
-        var deltaY = Int8(clamp(event.deltaY, min: -128, max: 127))
+        if event.type != .scrollWheel {
+            // Clamp delta values to Int8 range (-128 to 127)
+            let deltaX = Int8(clamp(event.deltaX, min: -128, max: 127))
+            let deltaY = Int8(clamp(event.deltaY, min: -128, max: 127))
 
-        var report: [UInt8] = [0, 0, 0]
-        
-        if event.type == .scrollWheel {
+            let report: [UInt8] = [
+                UInt8(NSEvent.pressedMouseButtons),
+                UInt8(bitPattern: deltaX),
+                UInt8(bitPattern: deltaY)
+            ]
+            bleService.sendMouseReport(report)
+        }
+        else {
             let wheelScroll = Int8(clamp(event.deltaY * 10, min: -128, max: 127))
             let wheelPan = Int8(clamp(event.deltaX * 10, min: -128, max: 127))
-            deltaX = Int8(0)
-            deltaY = Int8(0)
-            report.append(UInt8(bitPattern: wheelScroll))
-            report.append(UInt8(bitPattern: wheelPan))
+            let report: [UInt8] = [
+                UInt8(NSEvent.pressedMouseButtons),
+                0,
+                0,
+                UInt8(bitPattern: wheelScroll),
+                UInt8(bitPattern: wheelPan)
+            ]
+            bleService.sendMouseReport(report)
         }
-
-        report[0] = UInt8(NSEvent.pressedMouseButtons)
-        report[1] = UInt8(bitPattern: deltaX)
-        report[2] = UInt8(bitPattern: deltaY)
-        bleService.sendMouseReport(report)
     }
 } 
