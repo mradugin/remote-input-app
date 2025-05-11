@@ -59,7 +59,7 @@ struct ContentView: View {
                 bleService.stopScanning()
             }
             else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     print("ContentView: Disconnected, starting automatic scanning")
                     bleService.startScanning()
                 }
