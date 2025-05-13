@@ -1,9 +1,31 @@
 import SwiftUI
 import AppKit
+import CoreGraphics
 
 extension NSWindow {
     var titlebarHeight: CGFloat {
         frame.height - contentLayoutRect.height
+    }
+}
+
+struct FrameReader: ViewModifier {
+    @Binding var frame: CGRect
+    let coordinateSpace: CoordinateSpace
+    
+    func body(content: Content) -> some View {
+        content
+        .background {
+            GeometryReader { geometryValue in
+                let frame = geometryValue.frame(in: coordinateSpace)
+                Color.clear
+                .onAppear {
+                    self.frame = frame
+                }
+                .onChange(of: frame) { newValue in
+                    self.frame = newValue
+                }
+            }
+        }
     }
 }
 
@@ -12,6 +34,9 @@ struct ContentView: View {
 
     @State private var sidebarWidth: CGFloat = 200
     @State private var columnVisibility = NavigationSplitViewVisibility.all
+    @State private var ignoreNextMouseMove = false
+    @State private var isMouseTrapped = false
+    @State private var mainContentViewFrame: CGRect = .zero
     
     init() {
         print("ContentView: Initializing view")
@@ -36,6 +61,14 @@ struct ContentView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(.plain)
+                .disabled(!bleService.isConnected)
+
+                Divider()
+                
+                Toggle(isOn: $isMouseTrapped) {
+                    Label("Trap Mouse", systemImage: "cursorarrow.rays")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
                 .disabled(!bleService.isConnected)
             }
             .navigationSplitViewColumnWidth(sidebarWidth)
@@ -78,6 +111,14 @@ struct ContentView: View {
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
+                            
+                            if isMouseTrapped {
+                                Text("Mouse is trapped in this area. Press Ctrl+Alt+T to disable trapping.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                                    .padding(.horizontal)
+                            }
                         } else if !bleService.isPoweredOn {
                             Text("Please turn on Bluetooth to connect to the Remote Input Dongle")
                                 .font(.caption)
@@ -112,9 +153,11 @@ struct ContentView: View {
                 Spacer()
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .modifier(FrameReader(frame: $mainContentViewFrame, coordinateSpace: .named("contentView")))
             .border(bleService.isConnected ? Color.green : Color.clear, width: 2)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .coordinateSpace(name: "contentView")
         .onAppear {
             print("ContentView: View appeared, setting up event monitoring")
             setupEventMonitoring()
@@ -182,28 +225,38 @@ struct ContentView: View {
         let modifierMask = KeyMapping.getModifierMask(from: event.modifierFlags)
         print("ContentView: Modifier mask: \(modifierMask)")
 
-        reportKeyboardEvent(event.modifierFlags, nil)
+        reportKeyboardEvent(event.modifierFlags, true, nil)
     }
     
     private func handleKeyboardEvent(_ event: NSEvent) {
         print("ContentView: Handling keyboard event: \(event.type), keycode: \(event.keyCode), " +
             "modifierFlags: \(event.modifierFlags.rawValue)")
 
-        reportKeyboardEvent(event.modifierFlags, Int(event.keyCode))
+        // Check for Ctrl+Alt+T to toggle mouse trapping
+        if event.type == .keyDown && 
+           event.keyCode == 17 && // 't' key
+           event.modifierFlags.contains(.control) && 
+           event.modifierFlags.contains(.option) {
+            isMouseTrapped.toggle()
+            return
+        }
+
+        reportKeyboardEvent(event.modifierFlags, event.type == .keyDown, Int(event.keyCode))
     }
 
-    private func reportKeyboardEvent(_ modifierFlags: NSEvent.ModifierFlags, _ keyCode: Int?) {
+    private func reportKeyboardEvent(_ modifierFlags: NSEvent.ModifierFlags, _ keydown: Bool, _ keyCode: Int?) {
         let modifierMask = KeyMapping.getModifierMask(from: modifierFlags)
 
         var report: [UInt8] = [modifierMask, 0]
         
-        if let keyCode = keyCode {
+        if keydown, let keyCode = keyCode {
             if let usbKeyCode = KeyMapping.getKeyCode(fromEvent: keyCode) {
                 report[1] = usbKeyCode
                 print("ContentView: Usb key code: \(usbKeyCode)")
             }
             else {
                 print("ContentView: No usb key code found for keycode: \(keyCode)")
+                return
             }
         }
         bleService.sendKeyboardReport(report)
@@ -213,26 +266,42 @@ struct ContentView: View {
         return Swift.max(min, Swift.min(max, value))
     }
 
+    func moveMouse(to point: CGPoint) {
+        print("ContentView: Moving mouse to: \(point)")
+        CGWarpMouseCursorPosition(point)
+        CGAssociateMouseAndMouseCursorPosition(1)
+        ignoreNextMouseMove = true
+    }
+
     private func handleMouseEvent(_ event: NSEvent) {
-        // Check if mouse is within the main content area
-        guard let window = NSApp.windows.first(where: { $0.isKeyWindow }),
-              let contentView = window.contentView else {
+        if ignoreNextMouseMove {
+            ignoreNextMouseMove = false
             return
         }
 
-        let currentSidebarWidth = columnVisibility == .all ? sidebarWidth : 0
-        
-        let mainContentFrame = contentView.frame.insetBy(dx: currentSidebarWidth, dy: window.titlebarHeight)
-        print("ContentView titlebar height: \(window.titlebarHeight), main content frame: \(mainContentFrame)")
-
         // Check if mouse is within the main content area
-        guard mainContentFrame.contains(event.locationInWindow) else {
+        guard let window = NSApp.windows.first(where: { $0.isKeyWindow }) else {
             return
         }
 
         print("ContentView: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), " +
-            "dx: \(event.deltaX), dy: \(event.deltaY)")
+            "dx: \(event.deltaX), dy: \(event.deltaY), abs mouseLocation: \(NSEvent.mouseLocation.x), \(NSEvent.mouseLocation.y)")
         
+        let locationInWindow = event.locationInWindow
+        let frame = CGRect(x: mainContentViewFrame.origin.x, y: 0, 
+            width: mainContentViewFrame.width, height: mainContentViewFrame.height)
+            .insetBy(dx: 4, dy: 4) // Decrease area as above size calculations are not exact
+        guard frame.contains(locationInWindow) else {
+            print("ContentView: Mouse is outside main content area")
+            if isMouseTrapped {
+                let originY = NSScreen.screens[0].frame.maxY - window.frame.maxY
+                var mainContentCenterInScreenCoords = window.convertPoint(toScreen: NSPoint(x: frame.midX, y: 0))
+                mainContentCenterInScreenCoords.y = originY + mainContentViewFrame.midY
+                moveMouse(to: mainContentCenterInScreenCoords)
+            }
+            return
+        }
+
         if event.type != .scrollWheel {
             let deltaX = Int8(clamp(event.deltaX, min: -128, max: 127))
             let deltaY = Int8(clamp(event.deltaY, min: -128, max: 127))
@@ -278,7 +347,7 @@ struct ContentView: View {
         
         // Process each character with a small delay between them
         for (index, char) in string.enumerated() {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.01) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.005) {
                 // Convert character to uppercase for key code lookup
                 let upperChar = char.uppercased().first
                 
@@ -289,13 +358,8 @@ struct ContentView: View {
                     let keyDownReport: [UInt8] = [char.isUppercase ? HIDModifierFlags.LeftShift : 0, keyCode]
                     bleService.sendKeyboardReport(keyDownReport)
                     
-                    // If this is the last character, send key up after a short delay
-                }
-                if index == string.count - 1 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                        let keyUpReport: [UInt8] = [0, 0]
-                        bleService.sendKeyboardReport(keyUpReport)
-                    }
+                    let keyUpReport: [UInt8] = [0, 0]
+                    bleService.sendKeyboardReport(keyUpReport)
                 }
             }
         }
