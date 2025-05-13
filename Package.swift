@@ -4,20 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "RemoteInput",
+    name: "Remote Input",
     platforms: [
         .macOS(.v13)
     ],
     products: [
         .executable(
-            name: "RemoteInput",
-            targets: ["RemoteInput"]
+            name: "Remote Input",
+            targets: ["Remote Input"]
         )
     ],
     dependencies: [],
     targets: [
         .executableTarget(
-            name: "RemoteInput",
+            name: "Remote Input",
             resources: [
             ],
             swiftSettings: [
