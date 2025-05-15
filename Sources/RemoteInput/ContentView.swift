@@ -33,10 +33,9 @@ struct ContentView: View {
     @StateObject private var bleService = BLEService()
     @StateObject private var reportController: ReportController
 
-    @State private var sidebarWidth: CGFloat = 200
-    @State private var columnVisibility = NavigationSplitViewVisibility.all
     @State private var ignoreNextMouseMove = false
     @State private var isMouseTrapped = false
+    @State private var isCursorHidden = false
     @State private var mainContentViewFrame: CGRect = .zero
     
     init() {
@@ -48,7 +47,7 @@ struct ContentView: View {
     
     var body: some View {
         print("ContentView: Building view body")
-        return NavigationSplitView(columnVisibility: $columnVisibility) {
+        return NavigationSplitView(columnVisibility: .constant(.all)) {
             // Sidebar
             List {
                 Text("Special Functions")
@@ -70,9 +69,17 @@ struct ContentView: View {
                 Divider()
                 
                 Toggle(isOn: $isMouseTrapped) {
-                    Label("Trap Mouse", systemImage: "cursorarrow.rays")
+                    Label("Trap Mouse", systemImage: "cursorarrow.square")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .toggleStyle(.switch)
+                .disabled(!bleService.isConnected)
+                
+                Toggle(isOn: $isCursorHidden) {
+                    Label("Hide Cursor", systemImage: "cursorarrow.slash")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .toggleStyle(.switch)
                 .disabled(!bleService.isConnected)
                 
                 Divider()
@@ -91,7 +98,7 @@ struct ContentView: View {
                 }
                 .padding(.vertical, 4)
             }
-            .navigationSplitViewColumnWidth(sidebarWidth)
+            .navigationSplitViewColumnWidth(200)
             .background(Color(NSColor.windowBackgroundColor))
         }
         detail: {
@@ -175,6 +182,13 @@ struct ContentView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .modifier(FrameReader(frame: $mainContentViewFrame, coordinateSpace: .named("contentView")))
             .border(bleService.isConnected ? Color.green : Color.clear, width: 2)
+            .onHover { isHovering in
+                if isHovering && isCursorHidden {
+                    NSCursor.hide()
+                } else {
+                    NSCursor.unhide()
+                }
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .coordinateSpace(name: "contentView")
