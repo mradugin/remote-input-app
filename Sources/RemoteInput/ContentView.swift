@@ -47,7 +47,7 @@ struct ContentView: View {
     
     var body: some View {
         print("ContentView: Building view body")
-        return NavigationSplitView(columnVisibility: .constant(.all)) {
+        return NavigationSplitView() {
             // Sidebar
             List {
                 Text("Special Functions")
@@ -84,22 +84,30 @@ struct ContentView: View {
                 
                 Divider()
                 
-                HStack {
-                    Text("Queue: \(reportController.queueSize)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    Spacer()
-                    Button(action: { reportController.clearQueue() }) {
-                        Image(systemName: "trash")
-                            .foregroundColor(.red)
+                if reportController.queueSize >= 10 {
+                    VStack(spacing: 0) {
+                        HStack {
+                            Text("Queue: \(reportController.queueSize) items")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Button(action: { reportController.clearQueue() }) {
+                                Image(systemName: "trash")
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 12)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
                     }
-                    .buttonStyle(.plain)
-                    .disabled(reportController.queueSize < 100)
+                    .padding(.horizontal, 5)
                 }
-                .padding(.vertical, 4)
             }
             .navigationSplitViewColumnWidth(200)
             .background(Color(NSColor.windowBackgroundColor))
+            
         }
         detail: {
             // Main content
