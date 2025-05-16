@@ -13,7 +13,7 @@ struct FrameReader: ViewModifier {
                 .onAppear {
                     self.frame = frame
                 }
-                .onChange(of: frame) { newValue in
+                .onChange(of: frame) { oldValue, newValue in
                     self.frame = newValue
                 }
             }

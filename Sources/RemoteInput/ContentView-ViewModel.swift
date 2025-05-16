@@ -21,7 +21,7 @@ extension ContentView {
         }
         
         func handleNewDeviceDiscovery() {
-            guard !bleService.isConnected else { return }
+            guard bleService.connectionState == .disconnected else { return }
             
             // Connect to the first discovered device
             if let firstDevice = bleService.discoveredDevices.first {

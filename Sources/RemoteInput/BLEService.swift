@@ -4,7 +4,7 @@ import CoreBluetooth
 @Observable
 class BLEService: NSObject {
     private var centralManager: CBCentralManager!
-    var connectedPeripheral: CBPeripheral?
+    var devicePeripheral: CBPeripheral?
     private var keyboardCharacteristic: CBCharacteristic?
     private var mouseCharacteristic: CBCharacteristic?
     
@@ -17,12 +17,18 @@ class BLEService: NSObject {
     private var deviceLastSeen: [UUID: Date] = [:]
     private let deviceTimeout: TimeInterval = 5.0 // Remove device after 5 seconds of not being seen
     
+    enum ConnectionState {
+        case disconnected
+        case connecting
+        case connected
+        case ready
+    }
+    
     // Published properties for UI updates
+    var discoveredDevices: [CBPeripheral] = []
     var isScanning = false
     var isPoweredOn = false
-    var discoveredDevices: [CBPeripheral] = []
-    var isConnected = false
-    var isConnecting = false
+    var connectionState: ConnectionState = .disconnected
     
     override init() {
         super.init()
@@ -66,26 +72,27 @@ class BLEService: NSObject {
     
     func connect(to peripheral: CBPeripheral) {
         print("BLEService: Connecting to peripheral: \(peripheral.identifier)")
-        isConnecting = true
+        connectionState = .connecting
+        devicePeripheral = peripheral
         centralManager.connect(peripheral)
     }
     
     func disconnect() {
-        if let peripheral = connectedPeripheral {
+        if let peripheral = devicePeripheral {
             print("BLEService: Disconnecting from peripheral: \(peripheral.identifier)")
             centralManager.cancelPeripheralConnection(peripheral)
         }
     }
     
     func sendKeyboardReport(_ report: [UInt8]) {
-        guard let peripheral = connectedPeripheral,
+        guard connectionState == .ready, let peripheral = devicePeripheral,
               let characteristic = keyboardCharacteristic else { return }
         
         peripheral.writeValue(Data(report), for: characteristic, type: .withoutResponse)
     }
     
     func sendMouseReport(_ report: [UInt8]) {
-        guard let peripheral = connectedPeripheral,
+        guard connectionState == .ready, let peripheral = devicePeripheral,
               let characteristic = mouseCharacteristic else { return }
         
         peripheral.writeValue(Data(report), for: characteristic, type: .withoutResponse)
@@ -111,29 +118,30 @@ extension BLEService: CBCentralManagerDelegate {
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        guard devicePeripheral == peripheral else { return }
         print("BLEService: Connected to peripheral: \(peripheral.identifier)")
-        connectedPeripheral = peripheral
-        isConnecting = false
-        isConnected = true
+        connectionState = .connected
         peripheral.delegate = self
-
         peripheral.discoverServices([SERVICE_UUID])
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        guard devicePeripheral == peripheral else { return }
         print("BLEService: Disconnected from peripheral: \(peripheral.identifier)")
-        connectedPeripheral = nil
+        devicePeripheral = nil
         keyboardCharacteristic = nil
         mouseCharacteristic = nil
-        isConnected = false
+        connectionState = .disconnected
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        guard devicePeripheral == peripheral else { return }
         print("BLEService: Failed to connect to peripheral: \(peripheral.identifier)")
         if let error = error {
             print("BLEService: Error: \(error.localizedDescription)")
         }
-        isConnecting = false
+        devicePeripheral = nil
+        connectionState = .disconnected
     }
 }
 
@@ -153,6 +161,9 @@ extension BLEService: CBPeripheralDelegate {
             } else if characteristic.uuid == MOUSE_CHAR_UUID {
                 mouseCharacteristic = characteristic
             }
+        }
+        if keyboardCharacteristic != nil && mouseCharacteristic != nil {
+            connectionState = .ready
         }
     }
 }
