@@ -1,7 +1,8 @@
 import Foundation
 import CoreBluetooth
 
-class BLEService: NSObject, ObservableObject {
+@Observable
+class BLEService: NSObject {
     private var centralManager: CBCentralManager!
     var connectedPeripheral: CBPeripheral?
     private var keyboardCharacteristic: CBCharacteristic?
@@ -17,11 +18,11 @@ class BLEService: NSObject, ObservableObject {
     private let deviceTimeout: TimeInterval = 5.0 // Remove device after 5 seconds of not being seen
     
     // Published properties for UI updates
-    @Published var isScanning = false
-    @Published var isPoweredOn = false
-    @Published var discoveredDevices: [CBPeripheral] = []
-    @Published var isConnected = false
-    @Published var isConnecting = false
+    var isScanning = false
+    var isPoweredOn = false
+    var discoveredDevices: [CBPeripheral] = []
+    var isConnected = false
+    var isConnecting = false
     
     override init() {
         super.init()

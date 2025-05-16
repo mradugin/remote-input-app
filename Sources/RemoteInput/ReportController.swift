@@ -2,14 +2,15 @@ import Foundation
 import AppKit
 import Combine
 
-class ReportController: ObservableObject {
+@Observable
+class ReportController {
     private let bleService: BLEService
     private var reportQueue: [Report] = []
     private var isProcessingQueue = false
     private let queueProcessingInterval: TimeInterval = 0.005 // 5ms between reports
     private let maxKeysPerReport = 6
     
-    @Published private(set) var queueSize: Int = 0
+    private(set) var queueSize: Int = 0
     
     private enum Report {
         case keyboard([UInt8])
