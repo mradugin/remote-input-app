@@ -116,7 +116,7 @@ struct ContentView: View {
             Spacer()
             
             VStack(spacing: 5) {
-                Text("Remote Input Area")
+                Text("Mouse Input Area")
                     .font(.title)
                     .padding(.bottom, 10)
                 
@@ -198,4 +198,8 @@ struct ContentView: View {
             }
         }
     }
+}
+
+#Preview {
+    ContentView()
 }
