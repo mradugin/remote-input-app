@@ -18,6 +18,7 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "Remote Input",
+            path: ".",
             resources: [
             ],
             swiftSettings: [
