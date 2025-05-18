@@ -19,7 +19,12 @@ let package = Package(
         .executableTarget(
             name: "Remote Input",
             path: ".",
-            resources: [
+            exclude: [
+                "RemoteInput/Assets.xcassets",
+                "RemoteInput/Preview Content",
+                "RemoteInput/RemoteInput.entitlements",
+                "RemoteInputTests",
+                "RemoteInputUITests"
             ],
             swiftSettings: [
                 .unsafeFlags(["-framework", "AppKit"]),
