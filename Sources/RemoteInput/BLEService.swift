@@ -1,5 +1,6 @@
 import Foundation
 import CoreBluetooth
+import OSLog
 
 @Observable
 class BLEService: NSObject {
@@ -32,7 +33,7 @@ class BLEService: NSObject {
     
     override init() {
         super.init()
-        print("BLEService: Initializing")
+        Logger.bleService.trace("Initializing")
         centralManager = CBCentralManager(delegate: self, queue: nil)
         
         // Start timer to check for stale devices
@@ -52,9 +53,9 @@ class BLEService: NSObject {
     }
     
     func startScanning() {
-        print("BLEService: Starting scan")
+        Logger.bleService.trace("Starting scan")
         guard centralManager.state == .poweredOn else {
-            print("BLEService: Bluetooth is not powered on")
+            Logger.bleService.trace("Bluetooth is not powered on")
             return
         }
         
@@ -65,13 +66,13 @@ class BLEService: NSObject {
     }
     
     func stopScanning() {
-        print("BLEService: Stopping scan")
+        Logger.bleService.trace("Stopping scan")
         centralManager.stopScan()
         isScanning = false
     }
     
     func connect(to peripheral: CBPeripheral) {
-        print("BLEService: Connecting to peripheral: \(peripheral.identifier)")
+        Logger.bleService.trace("Connecting to peripheral: \(peripheral.identifier)")
         connectionState = .connecting
         devicePeripheral = peripheral
         centralManager.connect(peripheral)
@@ -79,7 +80,7 @@ class BLEService: NSObject {
     
     func disconnect() {
         if let peripheral = devicePeripheral {
-            print("BLEService: Disconnecting from peripheral: \(peripheral.identifier)")
+            Logger.bleService.trace("Disconnecting from peripheral: \(peripheral.identifier)")
             centralManager.cancelPeripheralConnection(peripheral)
         }
     }
@@ -102,12 +103,12 @@ class BLEService: NSObject {
 // MARK: - CBCentralManagerDelegate
 extension BLEService: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        print("BLEService: Central manager state updated: \(central.state)")
+        Logger.bleService.trace("Central manager state updated: \(central.state.rawValue)")
         isPoweredOn = central.state == .poweredOn
     }
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        print("BLEService: Discovered peripheral: \(peripheral.identifier) with RSSI: \(RSSI)")
+        Logger.bleService.trace("Discovered peripheral: \(peripheral.identifier) with RSSI: \(RSSI)")
         
         // Update last seen time
         deviceLastSeen[peripheral.identifier] = Date()
@@ -119,7 +120,7 @@ extension BLEService: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         guard devicePeripheral == peripheral else { return }
-        print("BLEService: Connected to peripheral: \(peripheral.identifier)")
+        Logger.bleService.trace("Connected to peripheral: \(peripheral.identifier)")
         connectionState = .connected
         peripheral.delegate = self
         peripheral.discoverServices([SERVICE_UUID])
@@ -127,7 +128,7 @@ extension BLEService: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         guard devicePeripheral == peripheral else { return }
-        print("BLEService: Disconnected from peripheral: \(peripheral.identifier)")
+        Logger.bleService.trace("Disconnected from peripheral: \(peripheral.identifier)")
         devicePeripheral = nil
         keyboardCharacteristic = nil
         mouseCharacteristic = nil
@@ -136,9 +137,9 @@ extension BLEService: CBCentralManagerDelegate {
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         guard devicePeripheral == peripheral else { return }
-        print("BLEService: Failed to connect to peripheral: \(peripheral.identifier)")
+        Logger.bleService.trace("Failed to connect to peripheral: \(peripheral.identifier)")
         if let error = error {
-            print("BLEService: Error: \(error.localizedDescription)")
+            Logger.bleService.trace("Error: \(error.localizedDescription)")
         }
         devicePeripheral = nil
         connectionState = .disconnected
@@ -149,13 +150,13 @@ extension BLEService: CBCentralManagerDelegate {
 extension BLEService: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let service = peripheral.services?.first else { return }
-        print("BLEService: Discovered service: \(service.uuid)")
+        Logger.bleService.trace("Discovered service: \(service.uuid)")
         peripheral.discoverCharacteristics([KEYBOARD_CHAR_UUID, MOUSE_CHAR_UUID], for: service)
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         for characteristic in service.characteristics ?? [] {
-            print("BLEService: Discovered characteristic: \(characteristic.uuid)")
+            Logger.bleService.trace("Discovered characteristic: \(characteristic.uuid)")
             if characteristic.uuid == KEYBOARD_CHAR_UUID {
                 keyboardCharacteristic = characteristic
             } else if characteristic.uuid == MOUSE_CHAR_UUID {
