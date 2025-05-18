@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import CoreGraphics
+import OSLog
 
 struct ContentView: View {
     @State private var viewModel = ViewModel()
@@ -14,12 +15,12 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .coordinateSpace(name: "contentView")
         .onAppear {
-            print("ContentView: View appeared, setting up event monitoring")
+            Logger.contentView.trace("View appeared, setting up event monitoring")
             viewModel.setupEventMonitoring()
         }
         .onChange(of: viewModel.bleService.isPoweredOn) { oldValue, newValue in
             if newValue {
-                print("ContentView: Bluetooth powered on, starting automatic scanning")
+                Logger.contentView.trace("Bluetooth powered on, starting automatic scanning")
                 viewModel.bleService.startScanning()
             }
         }
@@ -32,9 +33,16 @@ struct ContentView: View {
             }
             else if newValue == .disconnected {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    print("ContentView: Disconnected, starting automatic scanning")
+                    Logger.contentView.trace("Disconnected, starting automatic scanning")
                     viewModel.bleService.startScanning()
                 }
+            }
+        }
+        .onChange(of: viewModel.isMouseTrapped) { oldValue, newValue in
+            if newValue {
+                NSCursor.hide()
+            } else {
+                NSCursor.unhide()
             }
         }
     }
@@ -42,32 +50,31 @@ struct ContentView: View {
     private var sidebarContent: some View {
         List {
             Section(header: Text("Special Functions")) {
-                Button(action: viewModel.sendCtrlAltDel) {
-                    Label("Ctrl+Alt+Del", systemImage: "keyboard")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .buttonStyle(.plain)
-                .disabled(viewModel.bleService.connectionState != .ready)
-                
-                Button(action: viewModel.pasteFromClipboard) {
-                    Label("Paste", systemImage: "clipboard")
+                Button(action: viewModel.reportController.pasteFromClipboard) {
+                    Label("Paste from Clipboard", systemImage: "clipboard")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(.plain)
                 .disabled(viewModel.bleService.connectionState != .ready)
 
+                Button(action: viewModel.reportController.sendCtrlAltDel) {
+                    Label("Send Ctrl+Alt+Del", systemImage: "keyboard")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.bleService.connectionState != .ready)
+                
+                Button(action: viewModel.reportController.sendCtrlAltT) {
+                    Label("Send ^⌥T", systemImage: "keyboard")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.bleService.connectionState != .ready)                
             }
 
             Section(header: Text("Mouse Handling")) {
                 Toggle(isOn: $viewModel.isMouseTrapped) {
                     Label("Trap Mouse", systemImage: "cursorarrow.square")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .toggleStyle(.switch)
-                .disabled(viewModel.bleService.connectionState != .ready)
-                
-                Toggle(isOn: $viewModel.isCursorHidden) {
-                    Label("Hide Cursor", systemImage: "cursorarrow.slash")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .toggleStyle(.switch)
@@ -127,7 +134,7 @@ struct ContentView: View {
                             .padding(.horizontal)
                         
                         if viewModel.isMouseTrapped {
-                            Text("Mouse is trapped in this area. Press Ctrl+Alt+T to disable trapping.")
+                            Text("Mouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to disable trapping.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
@@ -169,13 +176,6 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .modifier(FrameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView")))
         .border(viewModel.bleService.connectionState == .ready ? Color.green : Color.clear, width: 2)
-        .onHover { isHovering in
-            if isHovering && viewModel.isCursorHidden {
-                NSCursor.hide()
-            } else {
-                NSCursor.unhide()
-            }
-        }
     }
     
     private var statusText: some View {
