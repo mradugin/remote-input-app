@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import Carbon.HIToolbox.Events
 import CoreGraphics
 import OSLog
 
@@ -63,12 +64,18 @@ extension ContentView {
         private func handleKeyboardEvent(_ event: NSEvent) {
             Logger.contentViewViewModel.trace("Handling keyboard event: \(event.type.rawValue), keycode: \(event.keyCode), modifierFlags: \(event.modifierFlags.rawValue)")
 
-            // Check for Ctrl+Alt+T to toggle mouse trapping
+            // Check for Control+Option+T to toggle mouse trapping
             if event.type == .keyDown && 
-            event.keyCode == 17 && // 't' key
+            event.keyCode == kVK_ANSI_T && // 't' key
             event.modifierFlags.contains(.control) && 
             event.modifierFlags.contains(.option) {
                 isMouseTrapped.toggle()
+                return
+            }
+
+            // Ignore Command+Tab events
+            if event.keyCode == kVK_Tab && // Tab key
+               event.modifierFlags.contains(.command) {
                 return
             }
 

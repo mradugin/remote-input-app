@@ -110,6 +110,16 @@ class ReportController {
         releaseAllKeys()
     }
 
+    func sendMetaTab() {
+        // Send Meta+Tab combination (internally maps to Command+Tab on Mac)
+        let report: [UInt8] = [
+            UInt8(HIDModifierFlags.LeftMeta),
+            HIDKeyCodes.Tab
+        ]
+        queueReport(.keyboard(report))
+        releaseAllKeys()
+    }
+
     func releaseAllKeys() {
         let releaseReport: [UInt8] = [0, 0]
         queueReport(.keyboard(releaseReport))
