@@ -9,26 +9,26 @@
 
 import SwiftUI
 import AppKit
+import OSLog
 
 @main
 struct RemoteInputApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     init() {
-        print("RemoteInputApp: Initializing app")
+        Logger.app.trace("Initializing app")
     }
     
     var body: some Scene {
-        print("RemoteInputApp: Creating window scene")
+        Logger.app.trace("Creating window scene")
         return WindowGroup {
             ContentView()
                 .frame(minWidth: 400, minHeight: 300)
                 .onAppear {
-                    print("RemoteInputApp: ContentView appeared")
+                    Logger.app.trace("ContentView appeared")
                 }
                 .onDisappear {
                     NSApplication.shared.terminate(nil)
                 }
-                //.edgesIgnoringSafeArea(.top)
         }
         .windowStyle(.hiddenTitleBar)
         .commands {

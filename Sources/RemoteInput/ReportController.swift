@@ -1,6 +1,7 @@
 import Foundation
 import AppKit
 import Combine
+import OSLog
 
 @Observable
 class ReportController {
@@ -53,10 +54,10 @@ class ReportController {
         if keydown, let keyCode = keyCode {
             if let usbKeyCode = KeyMapping.getKeyCode(fromEvent: keyCode) {
                 report[1] = usbKeyCode
-                print("ReportController: Usb key code: \(usbKeyCode)")
+                Logger.reportController.trace("Usb key code: \(usbKeyCode)")
             }
             else {
-                print("ReportController: No usb key code found for keycode: \(keyCode)")
+                Logger.reportController.warning("No usb key code found for keycode: \(keyCode)")
                 return
             }
         }
@@ -94,6 +95,16 @@ class ReportController {
         let report: [UInt8] = [
             UInt8(HIDModifierFlags.LeftCtrl | HIDModifierFlags.LeftAlt),
             HIDKeyCodes.Delete
+        ]
+        queueReport(.keyboard(report))
+        releaseAllKeys()
+    }
+
+    func sendCtrlAltT() {
+        // Send Ctrl+Alt+T combination
+        let report: [UInt8] = [
+            UInt8(HIDModifierFlags.LeftCtrl | HIDModifierFlags.LeftAlt),
+            HIDKeyCodes.T
         ]
         queueReport(.keyboard(report))
         releaseAllKeys()

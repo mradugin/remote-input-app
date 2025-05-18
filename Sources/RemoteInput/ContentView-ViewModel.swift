@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 import CoreGraphics
+import OSLog
 
 extension ContentView {
     @Observable
@@ -10,11 +11,10 @@ extension ContentView {
         
         var ignoreNextMouseMove = false
         var isMouseTrapped = false
-        var isCursorHidden = false
         var mainContentViewFrame: CGRect = .zero
         
         init() {
-            print("ContentView::ViewModel: Initializing view model")
+            Logger.contentViewViewModel.trace("Initializing view model")
             let bleService = BLEService()
             self.bleService = bleService
             self.reportController = ReportController(bleService: bleService)
@@ -25,14 +25,14 @@ extension ContentView {
             
             // Connect to the first discovered device
             if let firstDevice = bleService.discoveredDevices.first {
-                print("ContentView::ViewModel: Auto-connecting to discovered device: \(firstDevice.name ?? "Unknown")")
+                Logger.contentViewViewModel.trace("Auto-connecting to discovered device: \(firstDevice.name ?? "Unknown")")
                 bleService.connect(to: firstDevice)
                 bleService.stopScanning()
             }
         }
         
         func setupEventMonitoring() {
-            print("ContentView::ViewModel: Setting up event monitoring")
+            Logger.contentViewViewModel.trace("Setting up event monitoring")
 
             NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
                 self?.handleModifierEvent(event)
@@ -56,13 +56,12 @@ extension ContentView {
         }
         
         private func handleModifierEvent(_ event: NSEvent) {
-            print("ContentView::ViewModel: Handling modifier event: \(event.type), modifierFlags: \(event.modifierFlags.rawValue)")
+            Logger.contentViewViewModel.trace("Handling modifier event: \(event.type.rawValue), modifierFlags: \(event.modifierFlags.rawValue)")
             reportController.reportKeyboardEvent(event.modifierFlags, true, nil)
         }
         
         private func handleKeyboardEvent(_ event: NSEvent) {
-            print("ContentView::ViewModel: Handling keyboard event: \(event.type), keycode: \(event.keyCode), " +
-                "modifierFlags: \(event.modifierFlags.rawValue)")
+            Logger.contentViewViewModel.trace("Handling keyboard event: \(event.type.rawValue), keycode: \(event.keyCode), modifierFlags: \(event.modifierFlags.rawValue)")
 
             // Check for Ctrl+Alt+T to toggle mouse trapping
             if event.type == .keyDown && 
@@ -77,7 +76,7 @@ extension ContentView {
         }
 
         func moveMouse(to point: CGPoint) {
-            print("ContentView::ViewModel: Moving mouse to: \(point)")
+            Logger.contentViewViewModel.trace("Moving mouse to: \(point.x), \(point.y)")
             CGWarpMouseCursorPosition(point)
             CGAssociateMouseAndMouseCursorPosition(1)
             ignoreNextMouseMove = true
@@ -94,15 +93,14 @@ extension ContentView {
                 return
             }
 
-            print("ContentView::ViewModel: Handling mouse event: \(event.type), buttons: \(NSEvent.pressedMouseButtons), " +
-                "dx: \(event.deltaX), dy: \(event.deltaY), abs mouseLocation: \(NSEvent.mouseLocation.x), \(NSEvent.mouseLocation.y)")
+            Logger.contentViewViewModel.trace("Handling mouse event: \(event.type.rawValue), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY), abs mouseLocation: \(NSEvent.mouseLocation.x), \(NSEvent.mouseLocation.y)")
             
             let locationInWindow = event.locationInWindow
             let frame = CGRect(x: mainContentViewFrame.origin.x, y: 0, 
                 width: mainContentViewFrame.width, height: mainContentViewFrame.height)
                 .insetBy(dx: 4, dy: 4) // Decrease area as above size calculations are not exact
             guard frame.contains(locationInWindow) else {
-                print("ContentView::ViewModel: Mouse is outside main content area")
+                Logger.contentViewViewModel.trace("Mouse is outside main content area")
                 if isMouseTrapped {
                     let originY = NSScreen.screens[0].frame.maxY - window.frame.maxY
                     var mainContentCenterInScreenCoords = window.convertPoint(toScreen: NSPoint(x: frame.midX, y: 0))
@@ -113,14 +111,6 @@ extension ContentView {
             }
 
             reportController.reportMouseEvent(event)
-        }
-        
-        func sendCtrlAltDel() {
-            reportController.sendCtrlAltDel()
-        }
-        
-        func pasteFromClipboard() {
-            reportController.pasteFromClipboard()
         }
     }
 }
