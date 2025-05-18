@@ -171,7 +171,6 @@ struct KeyMapping {
         
         // Control characters
         0x0A: (HIDKeyCodes.Enter, 0),  // Line feed
-        0x0D: (HIDKeyCodes.Enter, 0),  // Carriage return
         0x09: (HIDKeyCodes.Tab, 0)     // Tab
     ]
 
