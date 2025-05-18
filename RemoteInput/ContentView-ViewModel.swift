@@ -1,8 +1,12 @@
 import SwiftUI
-import AppKit
-import Carbon.HIToolbox.Events
 import CoreGraphics
 import OSLog
+#if os(iOS)
+import UIKit
+#else
+import AppKit
+import Carbon.HIToolbox.Events
+#endif
 
 extension ContentView {
     @Observable
@@ -34,7 +38,8 @@ extension ContentView {
         
         func setupEventMonitoring() {
             Logger.contentViewViewModel.trace("Setting up event monitoring")
-
+            
+            #if os(macOS)
             NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
                 self?.handleModifierEvent(event)
                 return event
@@ -54,8 +59,10 @@ extension ContentView {
                 self?.handleMouseEvent(event)
                 return event
             }
+            #endif
         }
         
+        #if os(macOS)
         private func handleModifierEvent(_ event: NSEvent) {
             Logger.contentViewViewModel.trace("Handling modifier event: \(event.type.rawValue), modifierFlags: \(event.modifierFlags.rawValue)")
             reportController.reportKeyboardEvent(event.modifierFlags, true, nil)
@@ -119,5 +126,6 @@ extension ContentView {
 
             reportController.reportMouseEvent(event)
         }
+        #endif
     }
 }

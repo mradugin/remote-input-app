@@ -1,7 +1,10 @@
+#if os(macOS)
 import Carbon.HIToolbox.Events
 import AppKit
+#endif
 
 struct KeyMapping {
+    #if os(macOS)
     static let keyCodeMap: [Int: UInt8] = [
         // Letters
         kVK_ANSI_A: HIDKeyCodes.A,
@@ -92,7 +95,9 @@ struct KeyMapping {
         kVK_Option: HIDKeyCodes.LeftAlt,
         kVK_Command: HIDKeyCodes.LeftMeta,
     ]
-
+    #else
+    static let keyCodeMap: [Int: UInt8] = [:]
+    #endif
     // ASCII to HID key code mapping with modifiers
     static let asciiMap: [UInt8: (keyCode: UInt8, modifier: UInt8)] = [
         // Letters (uppercase need shift)
@@ -182,6 +187,7 @@ struct KeyMapping {
         return asciiMap[char]
     }
     
+    #if os(macOS)
     static func getModifierMask(from flags: NSEvent.ModifierFlags) -> UInt8 {
         let rawValue = flags.rawValue
         var mask: UInt8 = 0
@@ -211,6 +217,7 @@ struct KeyMapping {
         }
         return mask
     }
+    #endif
 } 
 
 
