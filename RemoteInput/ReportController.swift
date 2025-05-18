@@ -1,7 +1,12 @@
 import Foundation
-import AppKit
+import CoreBluetooth
 import Combine
 import OSLog
+#if os(iOS)
+import UIKit
+#else
+import AppKit
+#endif
 
 @Observable
 class ReportController {
@@ -13,7 +18,7 @@ class ReportController {
     
     private(set) var queueSize: Int = 0
     
-    private enum Report {
+    enum Report {
         case keyboard([UInt8])
         case mouse([UInt8])
     }
@@ -42,11 +47,12 @@ class ReportController {
         }
     }
     
-    private func queueReport(_ report: Report) {
+    func queueReport(_ report: Report) {
         reportQueue.append(report)
         queueSize = reportQueue.count
     }
     
+    #if os(macOS)
     func reportKeyboardEvent(_ modifierFlags: NSEvent.ModifierFlags, _ keydown: Bool, _ keyCode: Int?) {
         let modifierMask = KeyMapping.getModifierMask(from: modifierFlags)
         var report: [UInt8] = [modifierMask, 0]
@@ -89,6 +95,7 @@ class ReportController {
             queueReport(.mouse(report))
         }
     }
+    #endif
     
     func sendCtrlAltDel() {
         // Send Ctrl+Alt+Del combination
@@ -126,7 +133,11 @@ class ReportController {
     }
     
     func pasteFromClipboard() {
+        #if os(iOS)
+        guard let string = UIPasteboard.general.string else { return }
+        #else
         guard let string = NSPasteboard.general.string(forType: .string) else { return }
+        #endif
         
         var batch: [UInt8] = []
         var modifier: UInt8 = 0

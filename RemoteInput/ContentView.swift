@@ -1,6 +1,11 @@
 import SwiftUI
 import CoreGraphics
 import OSLog
+#if os(iOS)
+import UIKit
+#else
+import AppKit
+#endif
 
 struct ContentView: View {
     @State private var viewModel = ViewModel()
@@ -38,11 +43,13 @@ struct ContentView: View {
             }
         }
         .onChange(of: viewModel.isMouseTrapped) { oldValue, newValue in
+            #if os(macOS)
             if newValue {
                 NSCursor.hide()
             } else {
                 NSCursor.unhide()
             }
+            #endif
         }
     }
     
@@ -93,7 +100,9 @@ struct ContentView: View {
             }
         }
         .navigationSplitViewColumnWidth(200)
+        #if os(macOS)
         .background(Color(NSColor.windowBackgroundColor))
+        #endif
     }
     
     private var queueStatusView: some View {
@@ -182,6 +191,11 @@ struct ContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .modifier(FrameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView")))
         .border(viewModel.bleService.connectionState == .ready ? Color.green : Color.clear, width: 2)
+        #if os(iOS)
+        .background(
+            TouchInputHandlerView(reportController: viewModel.reportController)
+        )
+        #endif
     }
     
     private var statusText: some View {
@@ -205,6 +219,19 @@ struct ContentView: View {
         }
     }
 }
+
+#if os(iOS)
+struct TouchInputHandlerView: UIViewControllerRepresentable {
+    let reportController: ReportController
+    
+    func makeUIViewController(context: Context) -> TouchInputHandler {
+        TouchInputHandler(reportController: reportController)
+    }
+    
+    func updateUIViewController(_ uiViewController: TouchInputHandler, context: Context) {
+    }
+}
+#endif
 
 #Preview {
     ContentView()
