@@ -1,5 +1,4 @@
 import SwiftUI
-import AppKit
 import CoreGraphics
 import OSLog
 
@@ -65,11 +64,18 @@ struct ContentView: View {
                 .disabled(viewModel.bleService.connectionState != .ready)
                 
                 Button(action: viewModel.reportController.sendCtrlAltT) {
-                    Label("Send ^⌥T", systemImage: "keyboard")
+                    Label("Send ^⌥T (Ctrl+Alt+T)", systemImage: "keyboard")
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .buttonStyle(.plain)
-                .disabled(viewModel.bleService.connectionState != .ready)                
+                .disabled(viewModel.bleService.connectionState != .ready)
+                
+                Button(action: viewModel.reportController.sendMetaTab) {
+                    Label("Send ⌘⇥ (Meta+Tab)", systemImage: "arrow.triangle.2.circlepath")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.bleService.connectionState != .ready)
             }
 
             Section(header: Text("Mouse Handling")) {
