@@ -41,38 +41,38 @@ struct ContentView: View {
     
     private var sidebarContent: some View {
         List {
-            Text("Special Functions")
-                .font(.headline)
-            Button(action: viewModel.sendCtrlAltDel) {
-                Label("Ctrl+Alt+Del", systemImage: "keyboard")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-            .disabled(viewModel.bleService.connectionState != .ready)
-            
-            Button(action: viewModel.pasteFromClipboard) {
-                Label("Paste", systemImage: "clipboard")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .buttonStyle(.plain)
-            .disabled(viewModel.bleService.connectionState != .ready)
+            Section(header: Text("Special Functions")) {
+                Button(action: viewModel.sendCtrlAltDel) {
+                    Label("Ctrl+Alt+Del", systemImage: "keyboard")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.bleService.connectionState != .ready)
+                
+                Button(action: viewModel.pasteFromClipboard) {
+                    Label("Paste", systemImage: "clipboard")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .disabled(viewModel.bleService.connectionState != .ready)
 
-            Divider()
-            
-            Toggle(isOn: $viewModel.isMouseTrapped) {
-                Label("Trap Mouse", systemImage: "cursorarrow.square")
-                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .toggleStyle(.switch)
-            .disabled(viewModel.bleService.connectionState != .ready)
-            
-            Toggle(isOn: $viewModel.isCursorHidden) {
-                Label("Hide Cursor", systemImage: "cursorarrow.slash")
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .toggleStyle(.switch)
-            .disabled(viewModel.bleService.connectionState != .ready)
-            
+
+            Section(header: Text("Mouse Handling")) {
+                Toggle(isOn: $viewModel.isMouseTrapped) {
+                    Label("Trap Mouse", systemImage: "cursorarrow.square")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .toggleStyle(.switch)
+                .disabled(viewModel.bleService.connectionState != .ready)
+                
+                Toggle(isOn: $viewModel.isCursorHidden) {
+                    Label("Hide Cursor", systemImage: "cursorarrow.slash")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .toggleStyle(.switch)
+                .disabled(viewModel.bleService.connectionState != .ready)
+            }            
             Divider()
             
             if viewModel.reportController.queueSize >= 10 {
