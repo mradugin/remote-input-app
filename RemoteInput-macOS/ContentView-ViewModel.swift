@@ -39,30 +39,27 @@ extension ContentView {
         func setupEventMonitoring() {
             Logger.contentViewViewModel.trace("Setting up event monitoring")
             
-            #if os(macOS)
             NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
                 self?.handleModifierEvent(event)
                 return event
             }
-
+            
             NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .keyUp]) { [weak self] event in
                 self?.handleKeyboardEvent(event)
                 return nil  // Return nil to prevent system bell sound
             }
             
             NSEvent.addLocalMonitorForEvents(matching: [
-                    .mouseMoved, 
-                    .leftMouseDown, .leftMouseUp, 
-                    .rightMouseDown, .rightMouseUp, 
-                    .leftMouseDragged, .rightMouseDragged,
-                    .scrollWheel]) { [weak self] event in
-                self?.handleMouseEvent(event)
-                return event
-            }
-            #endif
+                .mouseMoved,
+                .leftMouseDown, .leftMouseUp,
+                .rightMouseDown, .rightMouseUp,
+                .leftMouseDragged, .rightMouseDragged,
+                .scrollWheel]) { [weak self] event in
+                    self?.handleMouseEvent(event)
+                    return event
+                }
         }
         
-        #if os(macOS)
         private func handleModifierEvent(_ event: NSEvent) {
             Logger.contentViewViewModel.trace("Handling modifier event: \(event.type.rawValue), modifierFlags: \(event.modifierFlags.rawValue)")
             reportController.reportKeyboardEvent(event.modifierFlags, true, nil)
@@ -126,6 +123,5 @@ extension ContentView {
 
             reportController.reportMouseEvent(event)
         }
-        #endif
     }
 }

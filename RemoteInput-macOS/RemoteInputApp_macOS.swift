@@ -12,9 +12,7 @@ import OSLog
 
 @main
 struct RemoteInputApp: App {
-    #if os(macOS)
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    #endif
     init() {
         Logger.app.trace("Initializing app")
     }
@@ -28,25 +26,19 @@ struct RemoteInputApp: App {
                     Logger.app.trace("ContentView appeared")
                 }
                 .onDisappear {
-                    #if os(macOS)
                     NSApplication.shared.terminate(nil)
-                    #endif
                 }
         }
-        #if os(macOS)
         .windowStyle(.hiddenTitleBar)
-        #endif
         .commands {
             SidebarCommands()
         }
     }
 }
 
-#if os(macOS)
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
     }
 }
-#endif

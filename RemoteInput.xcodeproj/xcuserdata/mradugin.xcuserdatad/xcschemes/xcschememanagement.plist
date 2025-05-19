@@ -4,10 +4,48 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>RemoteInput.xcscheme_^#shared#^_</key>
+		<key>RemoteInput-iOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
+		</dict>
+		<key>RemoteInput-macOS.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>8857C3F82DDBAA32009CA31B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8857C4072DDBAA32009CA31B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8857C4112DDBAA32009CA31B</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>88FC9A6D2DDA165E00DF1587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>88FC9A7E2DDA165E00DF1587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>88FC9A882DDA165E00DF1587</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

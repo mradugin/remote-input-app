@@ -1,10 +1,6 @@
 import SwiftUI
 import OSLog
-#if os(iOS)
-import UIKit
-#endif
 
-#if os(iOS)
 class TouchInputHandler: UIViewController {
     private let reportController: ReportController
     private var lastTouchLocation: CGPoint?
@@ -67,5 +63,3 @@ class TouchInputHandler: UIViewController {
         return Swift.max(min, Swift.min(max, value))
     }
 }
-
-#endif 

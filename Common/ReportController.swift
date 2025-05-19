@@ -9,7 +9,7 @@ import AppKit
 #endif
 
 @Observable
-class ReportController {
+public class ReportController {
     private let bleService: BLEService
     private var reportQueue: [Report] = []
     private var isProcessingQueue = false

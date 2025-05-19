@@ -1,6 +1,6 @@
 import OSLog
 
-extension Logger {
+public extension Logger {
     //private static var subsystem = Bundle.main.bundleIdentifier!
     private static var subsystem = "com.radugin.RemoteInput"
 

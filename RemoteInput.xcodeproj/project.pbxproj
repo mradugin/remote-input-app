@@ -6,7 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8857C46E2DDBAC66009CA31B /* BLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4612DDBAC66009CA31B /* BLEService.swift */; };
+		8857C4722DDBAC66009CA31B /* HIDKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4652DDBAC66009CA31B /* HIDKeys.swift */; };
+		8857C4742DDBAC66009CA31B /* KeyCodeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4672DDBAC66009CA31B /* KeyCodeMapping.swift */; };
+		8857C4752DDBAC66009CA31B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4682DDBAC66009CA31B /* Logger.swift */; };
+		8857C4772DDBAC66009CA31B /* ReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C46B2DDBAC66009CA31B /* ReportController.swift */; };
+		8857C47C2DDBAE01009CA31B /* BLEService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4612DDBAC66009CA31B /* BLEService.swift */; };
+		8857C47D2DDBAE01009CA31B /* HIDKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4652DDBAC66009CA31B /* HIDKeys.swift */; };
+		8857C47E2DDBAE01009CA31B /* KeyCodeMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4672DDBAC66009CA31B /* KeyCodeMapping.swift */; };
+		8857C47F2DDBAE01009CA31B /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C4682DDBAC66009CA31B /* Logger.swift */; };
+		8857C4802DDBAE01009CA31B /* ReportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8857C46B2DDBAC66009CA31B /* ReportController.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
+		8857C4092DDBAA32009CA31B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88FC9A662DDA165E00DF1587 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8857C3F82DDBAA32009CA31B;
+			remoteInfo = "RemoteInput-iOS";
+		};
+		8857C4132DDBAA32009CA31B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 88FC9A662DDA165E00DF1587 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8857C3F82DDBAA32009CA31B;
+			remoteInfo = "RemoteInput-iOS";
+		};
 		88FC9A802DDA165E00DF1587 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 88FC9A662DDA165E00DF1587 /* Project object */;
@@ -24,30 +51,74 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		88FC9A6E2DDA165E00DF1587 /* RemoteInput.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteInput.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8857C3F92DDBAA32009CA31B /* RemoteInput-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RemoteInput-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8857C4082DDBAA32009CA31B /* RemoteInput-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RemoteInput-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8857C4122DDBAA32009CA31B /* RemoteInput-iOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RemoteInput-iOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8857C4612DDBAC66009CA31B /* BLEService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEService.swift; sourceTree = "<group>"; };
+		8857C4652DDBAC66009CA31B /* HIDKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDKeys.swift; sourceTree = "<group>"; };
+		8857C4672DDBAC66009CA31B /* KeyCodeMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCodeMapping.swift; sourceTree = "<group>"; };
+		8857C4682DDBAC66009CA31B /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		8857C46B2DDBAC66009CA31B /* ReportController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportController.swift; sourceTree = "<group>"; };
+		88FC9A6E2DDA165E00DF1587 /* RemoteInput-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RemoteInput-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		88FC9A7F2DDA165E00DF1587 /* RemoteInputTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemoteInputTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		88FC9A892DDA165E00DF1587 /* RemoteInputUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemoteInputUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		88FC9A702DDA165E00DF1587 /* RemoteInput */ = {
+		8857C3FA2DDBAA32009CA31B /* RemoteInput-iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RemoteInput;
+			path = "RemoteInput-iOS";
 			sourceTree = "<group>";
 		};
-		88FC9A822DDA165E00DF1587 /* RemoteInputTests */ = {
+		8857C40B2DDBAA32009CA31B /* RemoteInput-iOSTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RemoteInputTests;
+			path = "RemoteInput-iOSTests";
 			sourceTree = "<group>";
 		};
-		88FC9A8C2DDA165E00DF1587 /* RemoteInputUITests */ = {
+		8857C4152DDBAA32009CA31B /* RemoteInput-iOSUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = RemoteInputUITests;
+			path = "RemoteInput-iOSUITests";
+			sourceTree = "<group>";
+		};
+		8857C46D2DDBAC66009CA31B /* RemoteInput-macOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "RemoteInput-macOS";
+			sourceTree = "<group>";
+		};
+		88FC9A822DDA165E00DF1587 /* RemoteInput-macOSTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "RemoteInput-macOSTests";
+			sourceTree = "<group>";
+		};
+		88FC9A8C2DDA165E00DF1587 /* RemoteInput-macOSUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "RemoteInput-macOSUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		8857C3F62DDBAA32009CA31B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8857C4052DDBAA32009CA31B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8857C40F2DDBAA32009CA31B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		88FC9A6B2DDA165E00DF1587 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -72,22 +143,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8857C47B2DDBAC6D009CA31B /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				8857C4612DDBAC66009CA31B /* BLEService.swift */,
+				8857C4652DDBAC66009CA31B /* HIDKeys.swift */,
+				8857C4672DDBAC66009CA31B /* KeyCodeMapping.swift */,
+				8857C4682DDBAC66009CA31B /* Logger.swift */,
+				8857C46B2DDBAC66009CA31B /* ReportController.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		88FC9A652DDA165E00DF1587 = {
 			isa = PBXGroup;
 			children = (
-				88FC9A702DDA165E00DF1587 /* RemoteInput */,
-				88FC9A822DDA165E00DF1587 /* RemoteInputTests */,
-				88FC9A8C2DDA165E00DF1587 /* RemoteInputUITests */,
+				8857C46D2DDBAC66009CA31B /* RemoteInput-macOS */,
+				88FC9A822DDA165E00DF1587 /* RemoteInput-macOSTests */,
+				88FC9A8C2DDA165E00DF1587 /* RemoteInput-macOSUITests */,
+				8857C3FA2DDBAA32009CA31B /* RemoteInput-iOS */,
+				8857C40B2DDBAA32009CA31B /* RemoteInput-iOSTests */,
+				8857C4152DDBAA32009CA31B /* RemoteInput-iOSUITests */,
 				88FC9A6F2DDA165E00DF1587 /* Products */,
+				8857C47B2DDBAC6D009CA31B /* Common */,
 			);
 			sourceTree = "<group>";
 		};
 		88FC9A6F2DDA165E00DF1587 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				88FC9A6E2DDA165E00DF1587 /* RemoteInput.app */,
+				88FC9A6E2DDA165E00DF1587 /* RemoteInput-macOS.app */,
 				88FC9A7F2DDA165E00DF1587 /* RemoteInputTests.xctest */,
 				88FC9A892DDA165E00DF1587 /* RemoteInputUITests.xctest */,
+				8857C3F92DDBAA32009CA31B /* RemoteInput-iOS.app */,
+				8857C4082DDBAA32009CA31B /* RemoteInput-iOSTests.xctest */,
+				8857C4122DDBAA32009CA31B /* RemoteInput-iOSUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +185,77 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		88FC9A6D2DDA165E00DF1587 /* RemoteInput */ = {
+		8857C3F82DDBAA32009CA31B /* RemoteInput-iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 88FC9A932DDA165E00DF1587 /* Build configuration list for PBXNativeTarget "RemoteInput" */;
+			buildConfigurationList = 8857C41A2DDBAA32009CA31B /* Build configuration list for PBXNativeTarget "RemoteInput-iOS" */;
+			buildPhases = (
+				8857C3F52DDBAA32009CA31B /* Sources */,
+				8857C3F62DDBAA32009CA31B /* Frameworks */,
+				8857C3F72DDBAA32009CA31B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8857C3FA2DDBAA32009CA31B /* RemoteInput-iOS */,
+			);
+			name = "RemoteInput-iOS";
+			packageProductDependencies = (
+			);
+			productName = "RemoteInput-iOS";
+			productReference = 8857C3F92DDBAA32009CA31B /* RemoteInput-iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8857C4072DDBAA32009CA31B /* RemoteInput-iOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8857C41D2DDBAA32009CA31B /* Build configuration list for PBXNativeTarget "RemoteInput-iOSTests" */;
+			buildPhases = (
+				8857C4042DDBAA32009CA31B /* Sources */,
+				8857C4052DDBAA32009CA31B /* Frameworks */,
+				8857C4062DDBAA32009CA31B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8857C40A2DDBAA32009CA31B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8857C40B2DDBAA32009CA31B /* RemoteInput-iOSTests */,
+			);
+			name = "RemoteInput-iOSTests";
+			packageProductDependencies = (
+			);
+			productName = "RemoteInput-iOSTests";
+			productReference = 8857C4082DDBAA32009CA31B /* RemoteInput-iOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8857C4112DDBAA32009CA31B /* RemoteInput-iOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8857C4202DDBAA32009CA31B /* Build configuration list for PBXNativeTarget "RemoteInput-iOSUITests" */;
+			buildPhases = (
+				8857C40E2DDBAA32009CA31B /* Sources */,
+				8857C40F2DDBAA32009CA31B /* Frameworks */,
+				8857C4102DDBAA32009CA31B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8857C4142DDBAA32009CA31B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				8857C4152DDBAA32009CA31B /* RemoteInput-iOSUITests */,
+			);
+			name = "RemoteInput-iOSUITests";
+			packageProductDependencies = (
+			);
+			productName = "RemoteInput-iOSUITests";
+			productReference = 8857C4122DDBAA32009CA31B /* RemoteInput-iOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		88FC9A6D2DDA165E00DF1587 /* RemoteInput-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 88FC9A932DDA165E00DF1587 /* Build configuration list for PBXNativeTarget "RemoteInput-macOS" */;
 			buildPhases = (
 				88FC9A6A2DDA165E00DF1587 /* Sources */,
 				88FC9A6B2DDA165E00DF1587 /* Frameworks */,
@@ -108,13 +266,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				88FC9A702DDA165E00DF1587 /* RemoteInput */,
+				8857C46D2DDBAC66009CA31B /* RemoteInput-macOS */,
 			);
-			name = RemoteInput;
+			name = "RemoteInput-macOS";
 			packageProductDependencies = (
 			);
 			productName = RemoteInput;
-			productReference = 88FC9A6E2DDA165E00DF1587 /* RemoteInput.app */;
+			productReference = 88FC9A6E2DDA165E00DF1587 /* RemoteInput-macOS.app */;
 			productType = "com.apple.product-type.application";
 		};
 		88FC9A7E2DDA165E00DF1587 /* RemoteInputTests */ = {
@@ -131,7 +289,7 @@
 				88FC9A812DDA165E00DF1587 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				88FC9A822DDA165E00DF1587 /* RemoteInputTests */,
+				88FC9A822DDA165E00DF1587 /* RemoteInput-macOSTests */,
 			);
 			name = RemoteInputTests;
 			packageProductDependencies = (
@@ -154,7 +312,7 @@
 				88FC9A8B2DDA165E00DF1587 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				88FC9A8C2DDA165E00DF1587 /* RemoteInputUITests */,
+				88FC9A8C2DDA165E00DF1587 /* RemoteInput-macOSUITests */,
 			);
 			name = RemoteInputUITests;
 			packageProductDependencies = (
@@ -173,6 +331,17 @@
 				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
+					8857C3F82DDBAA32009CA31B = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					8857C4072DDBAA32009CA31B = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 8857C3F82DDBAA32009CA31B;
+					};
+					8857C4112DDBAA32009CA31B = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 8857C3F82DDBAA32009CA31B;
+					};
 					88FC9A6D2DDA165E00DF1587 = {
 						CreatedOnToolsVersion = 16.1;
 					};
@@ -200,14 +369,38 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				88FC9A6D2DDA165E00DF1587 /* RemoteInput */,
+				88FC9A6D2DDA165E00DF1587 /* RemoteInput-macOS */,
 				88FC9A7E2DDA165E00DF1587 /* RemoteInputTests */,
 				88FC9A882DDA165E00DF1587 /* RemoteInputUITests */,
+				8857C3F82DDBAA32009CA31B /* RemoteInput-iOS */,
+				8857C4072DDBAA32009CA31B /* RemoteInput-iOSTests */,
+				8857C4112DDBAA32009CA31B /* RemoteInput-iOSUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8857C3F72DDBAA32009CA31B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8857C4062DDBAA32009CA31B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8857C4102DDBAA32009CA31B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		88FC9A6C2DDA165E00DF1587 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -232,10 +425,41 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8857C3F52DDBAA32009CA31B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8857C47C2DDBAE01009CA31B /* BLEService.swift in Sources */,
+				8857C47D2DDBAE01009CA31B /* HIDKeys.swift in Sources */,
+				8857C47E2DDBAE01009CA31B /* KeyCodeMapping.swift in Sources */,
+				8857C47F2DDBAE01009CA31B /* Logger.swift in Sources */,
+				8857C4802DDBAE01009CA31B /* ReportController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8857C4042DDBAA32009CA31B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8857C40E2DDBAA32009CA31B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		88FC9A6A2DDA165E00DF1587 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8857C4752DDBAC66009CA31B /* Logger.swift in Sources */,
+				8857C4722DDBAC66009CA31B /* HIDKeys.swift in Sources */,
+				8857C4772DDBAC66009CA31B /* ReportController.swift in Sources */,
+				8857C46E2DDBAC66009CA31B /* BLEService.swift in Sources */,
+				8857C4742DDBAC66009CA31B /* KeyCodeMapping.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,19 +480,178 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8857C40A2DDBAA32009CA31B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8857C3F82DDBAA32009CA31B /* RemoteInput-iOS */;
+			targetProxy = 8857C4092DDBAA32009CA31B /* PBXContainerItemProxy */;
+		};
+		8857C4142DDBAA32009CA31B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8857C3F82DDBAA32009CA31B /* RemoteInput-iOS */;
+			targetProxy = 8857C4132DDBAA32009CA31B /* PBXContainerItemProxy */;
+		};
 		88FC9A812DDA165E00DF1587 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 88FC9A6D2DDA165E00DF1587 /* RemoteInput */;
+			target = 88FC9A6D2DDA165E00DF1587 /* RemoteInput-macOS */;
 			targetProxy = 88FC9A802DDA165E00DF1587 /* PBXContainerItemProxy */;
 		};
 		88FC9A8B2DDA165E00DF1587 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 88FC9A6D2DDA165E00DF1587 /* RemoteInput */;
+			target = 88FC9A6D2DDA165E00DF1587 /* RemoteInput-macOS */;
 			targetProxy = 88FC9A8A2DDA165E00DF1587 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		8857C41B2DDBAA32009CA31B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RemoteInput-iOS/Preview Content\"";
+				DEVELOPMENT_TEAM = LS4AJUX2AC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Remote Input";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This application requires Bluetooth to connect to Remote Input Dongle";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.radugin.RemoteInput;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8857C41C2DDBAA32009CA31B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RemoteInput-iOS/Preview Content\"";
+				DEVELOPMENT_TEAM = LS4AJUX2AC;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Remote Input";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "This application requires Bluetooth to connect to Remote Input Dongle";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.radugin.RemoteInput;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8857C41E2DDBAA32009CA31B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LS4AJUX2AC;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.radugin.RemoteInput-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RemoteInput-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RemoteInput-iOS";
+			};
+			name = Debug;
+		};
+		8857C41F2DDBAA32009CA31B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LS4AJUX2AC;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.radugin.RemoteInput-iOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RemoteInput-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RemoteInput-iOS";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8857C4212DDBAA32009CA31B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LS4AJUX2AC;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.radugin.RemoteInput-iOSUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "RemoteInput-iOS";
+			};
+			name = Debug;
+		};
+		8857C4222DDBAA32009CA31B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LS4AJUX2AC;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.radugin.RemoteInput-iOSUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "RemoteInput-iOS";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		88FC9A912DDA165E00DF1587 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -388,10 +771,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = RemoteInput/RemoteInput.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "RemoteInput-macOS/RemoteInput.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"RemoteInput/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"RemoteInput-macOS/Preview Content\"";
 				DEVELOPMENT_TEAM = LS4AJUX2AC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -417,10 +801,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.radugin.RemoteInput;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.1;
 			};
 			name = Debug;
@@ -430,10 +814,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = RemoteInput/RemoteInput.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "RemoteInput-macOS/RemoteInput.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"RemoteInput/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"RemoteInput-macOS/Preview Content\"";
 				DEVELOPMENT_TEAM = LS4AJUX2AC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -459,10 +844,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.radugin.RemoteInput;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SUPPORTED_PLATFORMS = macosx;
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
 				XROS_DEPLOYMENT_TARGET = 2.1;
 			};
 			name = Release;
@@ -560,6 +945,33 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8857C41A2DDBAA32009CA31B /* Build configuration list for PBXNativeTarget "RemoteInput-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8857C41B2DDBAA32009CA31B /* Debug */,
+				8857C41C2DDBAA32009CA31B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8857C41D2DDBAA32009CA31B /* Build configuration list for PBXNativeTarget "RemoteInput-iOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8857C41E2DDBAA32009CA31B /* Debug */,
+				8857C41F2DDBAA32009CA31B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8857C4202DDBAA32009CA31B /* Build configuration list for PBXNativeTarget "RemoteInput-iOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8857C4212DDBAA32009CA31B /* Debug */,
+				8857C4222DDBAA32009CA31B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		88FC9A692DDA165E00DF1587 /* Build configuration list for PBXProject "RemoteInput" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -569,7 +981,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		88FC9A932DDA165E00DF1587 /* Build configuration list for PBXNativeTarget "RemoteInput" */ = {
+		88FC9A932DDA165E00DF1587 /* Build configuration list for PBXNativeTarget "RemoteInput-macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				88FC9A942DDA165E00DF1587 /* Debug */,
