@@ -96,49 +96,39 @@ class ReportController {
         }
     }
     #endif
+
+    func sendModifier(modifier: UInt8) {
+        let report: [UInt8] = [modifier, 0]
+        queueReport(.keyboard(report))
+    }
+
+    func sendSingleKey(keyCode: UInt8, modifier: UInt8) {
+        let report: [UInt8] = [modifier, keyCode]
+        queueReport(.keyboard(report))
+        releaseAllKeys()
+    }
     
     func sendCtrlAltDel() {
         // Send Ctrl+Alt+Del combination
-        let report: [UInt8] = [
-            UInt8(HIDModifierFlags.LeftCtrl | HIDModifierFlags.LeftAlt),
-            HIDKeyCodes.Delete
-        ]
-        queueReport(.keyboard(report))
-        releaseAllKeys()
+        sendSingleKey(keyCode: HIDKeyCodes.Delete, modifier: UInt8(HIDModifierFlags.LeftCtrl | HIDModifierFlags.LeftAlt))
     }
 
     func sendCtrlAltT() {
         // Send Ctrl+Alt+T combination
-        let report: [UInt8] = [
-            UInt8(HIDModifierFlags.LeftCtrl | HIDModifierFlags.LeftAlt),
-            HIDKeyCodes.T
-        ]
-        queueReport(.keyboard(report))
-        releaseAllKeys()
+        sendSingleKey(keyCode: HIDKeyCodes.T, modifier: UInt8(HIDModifierFlags.LeftCtrl | HIDModifierFlags.LeftAlt))
     }
 
     func sendMetaTab() {
         // Send Meta+Tab combination (internally maps to Command+Tab on Mac)
-        let report: [UInt8] = [
-            UInt8(HIDModifierFlags.LeftMeta),
-            HIDKeyCodes.Tab
-        ]
-        queueReport(.keyboard(report))
-        releaseAllKeys()
+        sendSingleKey(keyCode: HIDKeyCodes.Tab, modifier: UInt8(HIDModifierFlags.LeftMeta))
     }
 
     func releaseAllKeys() {
         let releaseReport: [UInt8] = [0, 0]
         queueReport(.keyboard(releaseReport))
     }
-    
-    func pasteFromClipboard() {
-        #if os(iOS)
-        guard let string = UIPasteboard.general.string else { return }
-        #else
-        guard let string = NSPasteboard.general.string(forType: .string) else { return }
-        #endif
-        
+
+    func sendTextString(_ string: String) {
         var batch: [UInt8] = []
         var modifier: UInt8 = 0
         // aabbccdd
@@ -168,6 +158,15 @@ class ReportController {
             queueReport(.keyboard([modifier] + batch))
             releaseAllKeys()
         }
+    }
+    
+    func pasteFromClipboard() {
+        #if os(iOS)
+        guard let string = UIPasteboard.general.string else { return }
+        #else
+        guard let string = NSPasteboard.general.string(forType: .string) else { return }
+        #endif
+        sendTextString(string)
     }
     
     func clearQueue() {
