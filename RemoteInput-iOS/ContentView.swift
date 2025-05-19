@@ -1,11 +1,6 @@
 import SwiftUI
 import CoreGraphics
 import OSLog
-#if os(iOS)
-import UIKit
-#else
-import AppKit
-#endif
 
 struct ContentView: View {
     @State private var viewModel = ViewModel()
@@ -14,7 +9,6 @@ struct ContentView: View {
     
     var body: some View {
         Group {
-            #if os(iOS)
             NavigationStack {
                 mainContent
                     .navigationTitle("Remote Input")
@@ -46,19 +40,10 @@ struct ContentView: View {
                         }
                     }
             }
-            #else
-            NavigationSplitView() {
-                sidebarContent
-            } detail: {
-                mainContent
-            }
-            #endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .coordinateSpace(name: "contentView")
         .onAppear {
             Logger.contentView.trace("View appeared, setting up event monitoring")
-            viewModel.setupEventMonitoring()
         }
         .onChange(of: viewModel.bleService.isPoweredOn) { oldValue, newValue in
             if newValue {
@@ -79,15 +64,6 @@ struct ContentView: View {
                     viewModel.bleService.startScanning()
                 }
             }
-        }
-        .onChange(of: viewModel.isMouseTrapped) { oldValue, newValue in
-            #if os(macOS)
-            if newValue {
-                NSCursor.hide()
-            } else {
-                NSCursor.unhide()
-            }
-            #endif
         }
     }
     
@@ -123,25 +99,10 @@ struct ContentView: View {
                 .disabled(viewModel.bleService.connectionState != .ready)
             }
 
-            #if os(macOS)
-            Section(header: Text("Mouse Handling")) {
-                Toggle(isOn: $viewModel.isMouseTrapped) {
-                    Label("Trap Mouse", systemImage: "cursorarrow.square")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .toggleStyle(.switch)
-                .disabled(viewModel.bleService.connectionState != .ready)
-            }
-            #endif
-            
             if viewModel.reportController.queueSize >= 10 {
                 queueStatusView
             }
         }
-        #if os(macOS)
-        .navigationSplitViewColumnWidth(200)
-        .background(Color(NSColor.windowBackgroundColor))
-        #endif
     }
     
     private var queueStatusView: some View {
@@ -184,14 +145,6 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                             .padding(.horizontal)
-                        
-                        if viewModel.isMouseTrapped {
-                            Text("Mouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to disable trapping.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                        }
                     } else if !viewModel.bleService.isPoweredOn {
                         Text("Please turn on Bluetooth to connect to the Remote Input Dongle")
                             .font(.caption)
@@ -223,15 +176,8 @@ struct ContentView: View {
                 .cornerRadius(10)
             }
             .padding()
-            
-            #if os(iOS)
-            TouchInputHandlerView(reportController: viewModel.reportController)
-                .allowsHitTesting(true)
-                .contentShape(Rectangle())
-            #endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .modifier(FrameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView")))
         .border(viewModel.bleService.connectionState == .ready ? Color.green : Color.clear, width: 2)
     }
     
@@ -257,7 +203,6 @@ struct ContentView: View {
     }
 }
 
-#if os(iOS)
 struct TouchInputHandlerView: UIViewControllerRepresentable {
     let reportController: ReportController
     
@@ -268,7 +213,6 @@ struct TouchInputHandlerView: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: TouchInputHandler, context: Context) {
     }
 }
-#endif
 
 #Preview {
     ContentView()
