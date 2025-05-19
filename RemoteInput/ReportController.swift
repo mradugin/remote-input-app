@@ -75,27 +75,40 @@ class ReportController {
             let deltaX = Int8(clamp(event.deltaX, min: -128, max: 127))
             let deltaY = Int8(clamp(event.deltaY, min: -128, max: 127))
 
-            let report: [UInt8] = [
-                UInt8(NSEvent.pressedMouseButtons),
-                UInt8(bitPattern: deltaX),
-                UInt8(bitPattern: deltaY)
-            ]
-            queueReport(.mouse(report))
+            reportMouseMovement(deltaX: deltaX, deltaY: deltaY, buttonMask: UInt8(NSEvent.pressedMouseButtons))
         }
         else {
             let wheelScroll = Int8(clamp(event.deltaY * 10, min: -128, max: 127))
             let wheelPan = Int8(clamp(event.deltaX * 10, min: -128, max: 127))
-            let report: [UInt8] = [
-                UInt8(NSEvent.pressedMouseButtons),
-                0,
-                0,
-                UInt8(bitPattern: wheelScroll),
-                UInt8(bitPattern: wheelPan)
-            ]
-            queueReport(.mouse(report))
+            reportMouseWheel(wheelScroll: wheelScroll, wheelPan: wheelPan, buttonMask: UInt8(NSEvent.pressedMouseButtons))
         }
     }
     #endif
+
+   func reportMouseButton(buttonMask: UInt8) {
+        let report: [UInt8] = [buttonMask, 0, 0]
+        queueReport(.mouse(report))
+    }
+    
+    func reportMouseMovement(deltaX: Int8, deltaY: Int8, buttonMask: UInt8) {
+        let report: [UInt8] = [
+            buttonMask,
+            UInt8(bitPattern: deltaX),
+            UInt8(bitPattern: deltaY)
+        ]
+        queueReport(.mouse(report))
+    }
+
+    func reportMouseWheel(wheelScroll: Int8, wheelPan: Int8, buttonMask: UInt8) {
+        let report: [UInt8] = [
+            buttonMask,
+            0,
+            0,
+            UInt8(bitPattern: wheelScroll),
+            UInt8(bitPattern: wheelPan)
+        ]
+        queueReport(.mouse(report))
+    }
 
     func sendModifier(modifier: UInt8) {
         let report: [UInt8] = [modifier, 0]
