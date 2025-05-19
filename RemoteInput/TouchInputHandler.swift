@@ -32,8 +32,7 @@ class TouchInputHandler: UIViewController {
         isDragging = true
         
         // Simulate mouse down
-        let report: [UInt8] = [1, 0, 0] // Left mouse button down
-        reportController.reportMouseEvent(report)
+        reportController.reportMouseButton(buttonMask: 1)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -48,13 +47,7 @@ class TouchInputHandler: UIViewController {
         let deltaXInt8 = Int8(clamp(deltaX, min: -128, max: 127))
         let deltaYInt8 = Int8(clamp(deltaY, min: -128, max: 127))
         
-        let report: [UInt8] = [
-            isDragging ? 1 : 0, // Mouse button state
-            UInt8(bitPattern: deltaXInt8),
-            UInt8(bitPattern: deltaYInt8)
-        ]
-        reportController.reportMouseEvent(report)
-        
+        reportController.reportMouseMovement(deltaX: deltaXInt8, deltaY: deltaYInt8, buttonMask: isDragging ? 1 : 0)
         lastTouchLocation = location
     }
     
@@ -63,8 +56,7 @@ class TouchInputHandler: UIViewController {
         lastTouchLocation = nil
         
         // Simulate mouse up
-        let report: [UInt8] = [0, 0, 0] // Mouse button up
-        reportController.reportMouseEvent(report)
+        reportController.reportMouseButton(buttonMask: 0)
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -76,9 +68,4 @@ class TouchInputHandler: UIViewController {
     }
 }
 
-extension ReportController {
-    func reportMouseEvent(_ report: [UInt8]) {
-        queueReport(.mouse(report))
-    }
-}
 #endif 
