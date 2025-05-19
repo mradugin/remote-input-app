@@ -9,12 +9,50 @@ import AppKit
 
 struct ContentView: View {
     @State private var viewModel = ViewModel()
+    @State private var showSidebar = false
+    @State private var showKeyboard = false
     
     var body: some View {
-        NavigationSplitView {
-            sidebarContent
-        } detail: {
-            mainContent
+        Group {
+            #if os(iOS)
+            NavigationStack {
+                mainContent
+                    .navigationTitle("Remote Input")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                showSidebar.toggle()
+                            } label: {
+                                Image(systemName: "sidebar.left")
+                            }
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button {
+                                showKeyboard.toggle()
+                            } label: {
+                                Image(systemName: "keyboard")
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showSidebar) {
+                        NavigationStack {
+                            sidebarContent
+                        }
+                    }
+                    .sheet(isPresented: $showKeyboard) {
+                        NavigationStack {
+                            KeyboardInputView(reportController: viewModel.reportController)
+                        }
+                    }
+            }
+            #else
+            NavigationSplitView() {
+                sidebarContent
+            } detail: {
+                mainContent
+            }
+            #endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .coordinateSpace(name: "contentView")
@@ -85,6 +123,7 @@ struct ContentView: View {
                 .disabled(viewModel.bleService.connectionState != .ready)
             }
 
+            #if os(macOS)
             Section(header: Text("Mouse Handling")) {
                 Toggle(isOn: $viewModel.isMouseTrapped) {
                     Label("Trap Mouse", systemImage: "cursorarrow.square")
@@ -92,15 +131,15 @@ struct ContentView: View {
                 }
                 .toggleStyle(.switch)
                 .disabled(viewModel.bleService.connectionState != .ready)
-            }            
-            Divider()
+            }
+            #endif
             
             if viewModel.reportController.queueSize >= 10 {
                 queueStatusView
             }
         }
-        .navigationSplitViewColumnWidth(200)
         #if os(macOS)
+        .navigationSplitViewColumnWidth(200)
         .background(Color(NSColor.windowBackgroundColor))
         #endif
     }
@@ -127,10 +166,8 @@ struct ContentView: View {
     }
     
     private var mainContent: some View {
-        VStack {
-            Spacer()
-            
-            VStack(spacing: 5) {
+        ZStack {
+            VStack {
                 Text("Mouse Input Area")
                     .font(.title)
                     .padding(.bottom, 10)
@@ -185,17 +222,17 @@ struct ContentView: View {
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(10)
             }
+            .padding()
             
-            Spacer()
+            #if os(iOS)
+            TouchInputHandlerView(reportController: viewModel.reportController)
+                .allowsHitTesting(true)
+                .contentShape(Rectangle())
+            #endif
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .modifier(FrameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView")))
         .border(viewModel.bleService.connectionState == .ready ? Color.green : Color.clear, width: 2)
-        #if os(iOS)
-        .background(
-            TouchInputHandlerView(reportController: viewModel.reportController)
-        )
-        #endif
     }
     
     private var statusText: some View {
