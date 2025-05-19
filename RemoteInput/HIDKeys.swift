@@ -72,6 +72,7 @@ enum HIDKeyCodes {
     static let Comma: UInt8 = 0x36
     static let Dot: UInt8 = 0x37
     static let Slash: UInt8 = 0x38
+    static let CapsLock: UInt8 = 0x39
     
     // Function keys
     static let F1: UInt8 = 0x3A
@@ -107,4 +108,5 @@ enum HIDKeyCodes {
     static let RightShift: UInt8 = 0xE5
     static let RightAlt: UInt8 = 0xE6
     static let RightMeta: UInt8 = 0xE7
+    static let Fn: UInt8 = 0xE8
 } 
