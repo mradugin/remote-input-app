@@ -1,10 +1,9 @@
 import SwiftUI
 
-#if os(iOS)
 struct KeyboardInputView: View {
     let reportController: ReportController
-    @Environment(\.dismiss) private var dismiss
     @State private var modifiers: Set<ModifierKey> = []
+    @Binding var selectedInputMode: ContentView.InputMode
     
     enum ModifierKey: String, CaseIterable, Hashable {
         case shift = "⇧"
@@ -161,17 +160,41 @@ struct KeyboardInputView: View {
                 }
             }
             
-            HStack {
-                Button("Done") {
-                    dismiss()
+            HStack(spacing: 8) {
+                Button(action: reportController.pasteFromClipboard) {
+                    Label("Paste", systemImage: "doc.on.clipboard")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(6)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.plain)
+                
+                Button(action: reportController.sendCtrlAltDel) {
+                    Label("Ctrl+Alt+Del", systemImage: "keyboard")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
+                
+                Button(action: { selectedInputMode = .touch }) {
+                    Label("Touch", systemImage: "hand.point.up")
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 8)
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
             }
-            .padding(.top)
+            .padding(.horizontal)
+            .padding(.top, 8)
         }
-        .padding()
-        .navigationTitle("Keyboard")
-        .navigationBarTitleDisplayMode(.inline)
+        //.padding()
     }
     
     private func handleKeyPress(_ key: Key) {
@@ -190,4 +213,3 @@ struct KeyboardInputView: View {
         }
     }
 }
-#endif 

@@ -17,6 +17,7 @@ extension ContentView {
         var ignoreNextMouseMove = false
         var isMouseTrapped = false
         var mainContentViewFrame: CGRect = .zero
+        var lastMoveCoords: CGPoint = .zero
         
         init() {
             Logger.contentViewViewModel.trace("Initializing view model")
@@ -88,6 +89,7 @@ extension ContentView {
 
         func moveMouse(to point: CGPoint) {
             Logger.contentViewViewModel.trace("Moving mouse to: \(point.x), \(point.y)")
+            
             CGWarpMouseCursorPosition(point)
             CGAssociateMouseAndMouseCursorPosition(1)
             ignoreNextMouseMove = true
@@ -104,15 +106,20 @@ extension ContentView {
                 return
             }
 
-            Logger.contentViewViewModel.trace("Handling mouse event: \(event.type.rawValue), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY), abs mouseLocation: \(NSEvent.mouseLocation.x), \(NSEvent.mouseLocation.y)")
-            
+            Logger.contentViewViewModel.trace("Handling mouse event: \(event.type.rawValue), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
+
             let locationInWindow = event.locationInWindow
-            let frame = CGRect(x: mainContentViewFrame.origin.x, y: 0, 
+            let locationOnScreen = window.convertPoint(toScreen: locationInWindow)
+            Logger.contentViewViewModel.trace("Location in window: \(locationInWindow.x), \(locationInWindow.y), screen: \(locationOnScreen.x), \(locationOnScreen.y)")
+            let frame = CGRect(x: mainContentViewFrame.origin.x, y: 0,
                 width: mainContentViewFrame.width, height: mainContentViewFrame.height)
                 .insetBy(dx: 4, dy: 4) // Decrease area as above size calculations are not exact
+            Logger.contentViewViewModel.trace("Content frame: \(frame.minX), \(frame.minY), \(frame.maxX), \(frame.maxY)")
             guard frame.contains(locationInWindow) else {
                 Logger.contentViewViewModel.trace("Mouse is outside main content area")
                 if isMouseTrapped {
+                    lastMoveCoords = NSPoint(x: frame.midX, y: frame.midY)
+                    Logger.contentViewViewModel.trace("Moving to (window coords): \(self.lastMoveCoords.x), \(self.lastMoveCoords.y)")
                     let originY = NSScreen.screens[0].frame.maxY - window.frame.maxY
                     var mainContentCenterInScreenCoords = window.convertPoint(toScreen: NSPoint(x: frame.midX, y: 0))
                     mainContentCenterInScreenCoords.y = originY + mainContentViewFrame.midY
