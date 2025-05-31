@@ -115,7 +115,7 @@ extension ContentView {
                 width: mainContentViewFrame.width, height: mainContentViewFrame.height)
                 .insetBy(dx: 4, dy: 4) // Decrease area as above size calculations are not exact
             Logger.contentViewViewModel.trace("Content frame: \(frame.minX), \(frame.minY), \(frame.maxX), \(frame.maxY)")
-            guard frame.contains(locationInWindow) else {
+            if !frame.contains(locationInWindow) {
                 Logger.contentViewViewModel.trace("Mouse is outside main content area")
                 if isMouseTrapped {
                     lastMoveCoords = NSPoint(x: frame.midX, y: frame.midY)
@@ -125,10 +125,12 @@ extension ContentView {
                     mainContentCenterInScreenCoords.y = originY + mainContentViewFrame.midY
                     moveMouse(to: mainContentCenterInScreenCoords)
                 }
-                return
             }
 
-            reportController.reportMouseEvent(event)
+            // Only send mouse events if mouse is trapped
+            if isMouseTrapped {
+                reportController.reportMouseEvent(event)
+            }
         }
     }
 }
