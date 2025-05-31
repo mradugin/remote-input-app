@@ -135,14 +135,14 @@ struct ContentView: View {
                     }
                     
                     if viewModel.bleService.connectionState == .ready {
-                        Text("All the keyboard and mouse input within this area is being sent to the remote device")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal)
-                        
                         if viewModel.isMouseTrapped {
-                            Text("Mouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to disable trapping.")
+                            Text("Mouse is trapped in this area. All mouse input will be sent to the remote device. Press ⌃⌥T (Control + Option + T) to disable trapping.")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
+                        } else {
+                            Text("Click in this area to trap mouse and send input to the remote device")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
@@ -183,7 +183,16 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .modifier(FrameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView")))
-        .border(viewModel.bleService.connectionState == .ready ? Color.green : Color.clear, width: 2)
+        .border(viewModel.bleService.connectionState == .ready && viewModel.isMouseTrapped ? Color.green : Color.clear, width: 2)
+        .contentShape(Rectangle())
+        .simultaneousGesture(
+            TapGesture()
+                .onEnded { _ in
+                    if viewModel.bleService.connectionState == .ready && !viewModel.isMouseTrapped {
+                        viewModel.isMouseTrapped = true
+                    }
+                }
+        )
     }
     
     private var statusText: some View {
