@@ -54,7 +54,7 @@ struct ContentView: View {
     
     private var sidebarContent: some View {
         List {
-            Section(header: Text("Devices")) {
+            Section(header: Text("Device")) {
                 if !viewModel.bleService.isPoweredOn {
                     Text("Bluetooth is off")
                         .foregroundColor(.secondary)
@@ -319,28 +319,51 @@ struct ContentView: View {
                     
                     if !viewModel.bleService.discoveredDevices.isEmpty && 
                        ![.connecting, .connected, .pairing, .ready].contains(viewModel.bleService.connectionState) {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Available Devices")
-                                .font(.headline)
-                                .padding(.horizontal)
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack {
+                                Text("Available Devices")
+                                    .font(.headline)
+                                Spacer()
+                                Text("\(viewModel.bleService.discoveredDevices.count) found")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal)
                             
                             ScrollView {
                                 VStack(spacing: 8) {
                                     ForEach(viewModel.bleService.discoveredDevices, id: \.identifier) { device in
-                                        DeviceRow(device: device,
-                                                isConnected: false,
-                                                onConnect: { viewModel.connectToDevice(device) },
-                                                onDisconnect: { viewModel.disconnectFromDevice() })
-                                            .padding(.horizontal)
-                                            .padding(.vertical, 8)
+                                        Button(action: { viewModel.connectToDevice(device) }) {
+                                            HStack {
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text(device.name ?? "Unknown Device")
+                                                        .font(.headline)
+                                                        .foregroundColor(.primary)
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                                Image(systemName: "chevron.right.circle.fill")
+                                                    .foregroundColor(.blue)
+                                                    .font(.system(size: 20))
+                                            }
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 12)
                                             .background(Color.gray.opacity(0.1))
-                                            .cornerRadius(8)
+                                            .cornerRadius(10)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .contentShape(Rectangle())
                                     }
                                 }
                                 .padding(.horizontal)
+                                .padding(.vertical)
                             }
                             .frame(maxHeight: 300)
+                            .background(Color.gray.opacity(0.05))
+                            .cornerRadius(12)
                         }
+                        .padding(.horizontal)
                     }
                     
                     Spacer()
