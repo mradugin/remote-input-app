@@ -20,6 +20,8 @@ extension ContentView {
         var mainContentViewFrame: CGRect = .zero
         var lastMoveCoords: CGPoint = .zero
         
+        var isKeyboardForwardingEnabled = false
+        
         init() {
             Logger.contentViewViewModel.trace("Initializing view model")
             let bleService = BLEService()
@@ -52,13 +54,20 @@ extension ContentView {
             Logger.contentViewViewModel.trace("Setting up event monitoring")
             
             NSEvent.addLocalMonitorForEvents(matching: .flagsChanged) { [weak self] event in
-                self?.handleModifierEvent(event)
+                if self?.isKeyboardForwardingEnabled ?? false || self?.isMouseTrapped ?? false {
+                    self?.handleModifierEvent(event)
+                    return nil
+                }
                 return event
             }
             
             NSEvent.addLocalMonitorForEvents(matching: [.keyDown, .keyUp]) { [weak self] event in
-                self?.handleKeyboardEvent(event)
-                return nil  // Return nil to prevent system bell sound
+                if self?.isKeyboardForwardingEnabled ?? false || self?.isMouseTrapped ?? false {
+                    self?.handleKeyboardEvent(event)
+                    return nil  // Return nil to prevent system bell sound
+                } else {
+                    return event
+                }
             }
             
             NSEvent.addLocalMonitorForEvents(matching: [

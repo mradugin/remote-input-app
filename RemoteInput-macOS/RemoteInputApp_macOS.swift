@@ -21,7 +21,7 @@ struct RemoteInputApp: App {
         Logger.app.trace("Creating window scene")
         return WindowGroup {
             ContentView()
-                .frame(minWidth: 400, minHeight: 300)
+                .frame(minWidth: 400, minHeight: 400)
                 .onAppear {
                     Logger.app.trace("ContentView appeared")
                 }

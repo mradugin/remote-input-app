@@ -6,8 +6,6 @@ import CoreBluetooth
 
 struct ContentView: View {
     @State private var viewModel = ViewModel()
-    @State private var showSidebar = false
-    @State private var showKeyboard = false
     
     var body: some View {
         Group {
@@ -135,14 +133,15 @@ struct ContentView: View {
                 VStack(spacing: 20) {
                     VStack(spacing: 10) {
                         VStack(spacing: 16) {
-                            Image(systemName: viewModel.isMouseTrapped ? "cursorarrow.rays" : "cursorarrow")
+                            Image(systemName: "cursorarrow.motionlines")
                                 .font(.system(size: 40))
                                 .frame(width: 40, height: 40)
-                                .foregroundColor(.blue)
+                                .foregroundColor(viewModel.isMouseTrapped ? .blue : .gray)
                             
-                            statusText
+                            Text(viewModel.isMouseTrapped ? "Mouse input forwarding is active" : "Mouse input forwarding is paused")
+                                .foregroundColor(.primary)
                                 .font(.headline)
-                            
+                                                            
                             if viewModel.isMouseTrapped {
                                 Text("All mouse input is being sent to the remote device.\nMouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to stop forwarding mouse input.")
                                     .font(.subheadline)
@@ -166,6 +165,7 @@ struct ContentView: View {
                                 }
                                 .buttonStyle(.plain)
                                 .padding(.top, 8)
+                                
                             }
                         }
                         .padding()
@@ -174,7 +174,38 @@ struct ContentView: View {
                         .cornerRadius(10)
                     }
                     .padding()
-                    
+
+                    VStack(spacing: 10) {
+                        VStack(spacing: 16) {
+                            Image(systemName: "keyboard")
+                                .font(.system(size: 40))
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(viewModel.isKeyboardForwardingEnabled || viewModel.isMouseTrapped ? .blue : .gray)
+                            
+                            Text(viewModel.isKeyboardForwardingEnabled || viewModel.isMouseTrapped ? 
+                                "Keyboard input forwarding is active" : 
+                                "Keyboard input forwarding is paused")
+                                .font(.headline)
+                                
+                            if (!viewModel.isMouseTrapped) {
+                                Text("Use toggle below to enable forwarding of keyboard input to the remote device when mouse input is not being forwarded")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+
+                                Toggle(isOn: $viewModel.isKeyboardForwardingEnabled) {
+                                    Text("Independent Keyboard Forwarding")
+                                }
+                                .toggleStyle(.switch)                                
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                    }
+                    .padding()
+
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -367,31 +398,6 @@ struct ContentView: View {
         }
     }
     
-    private var statusText: some View {
-        Group {
-            if viewModel.bleService.connectionState == .ready {
-                if viewModel.isMouseTrapped {
-                    Text("Forwarding Mouse Input")
-                        .foregroundColor(.primary)
-                } else {
-                    Text("Mouse Input Forwarding Paused")
-                        .foregroundColor(.orange)
-                }
-            } else if !viewModel.bleService.isPoweredOn {
-                Text("Bluetooth Off")
-                    .foregroundColor(.red)
-            } else if viewModel.bleService.isScanning {
-                Text("Scanning...")
-                    .foregroundColor(.yellow)
-            } else if [.connecting, .connected].contains(viewModel.bleService.connectionState) {
-                Text("Connecting...")
-                    .foregroundColor(.orange)
-            } else {
-                Text("Disconnected")
-                    .foregroundColor(.red)
-            }
-        }
-    }
 }
 
 struct DeviceRow: View {
