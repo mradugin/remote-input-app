@@ -98,16 +98,6 @@ struct ContentView: View {
                 .buttonStyle(.plain)
                 .disabled(viewModel.bleService.connectionState != .ready)
             }
-
-            Section(header: Text("Mouse Handling")) {
-                Toggle(isOn: $viewModel.isMouseTrapped) {
-                    Label("Trap Mouse", systemImage: "cursorarrow.square")
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .toggleStyle(.switch)
-                .disabled(viewModel.bleService.connectionState != .ready)
-                .opacity(viewModel.bleService.connectionState == .ready ? 1.0 : 0.5)
-            }
             
             if viewModel.reportController.queueSize >= 10 {
                 queueStatusView
@@ -142,50 +132,54 @@ struct ContentView: View {
         Group {
             if viewModel.bleService.connectionState == .ready {
                 // Mouse input area when connected
-                ZStack {
-                    VStack {
-                        Text("Mouse Input Area")
-                            .font(.title)
-                            .padding(.bottom, 10)
-                        
-                        VStack(spacing: 10) {
-                            HStack {
-                                Text("Status:")
-                                statusText
-                            }
+                VStack(spacing: 20) {
+                    VStack(spacing: 10) {
+                        VStack(spacing: 16) {
+                            Image(systemName: viewModel.isMouseTrapped ? "cursorarrow.rays" : "cursorarrow")
+                                .font(.system(size: 40))
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                            
+                            statusText
+                                .font(.headline)
                             
                             if viewModel.isMouseTrapped {
-                                Text("Mouse is trapped in this area. All mouse input will be sent to the remote device. Press ⌃⌥T (Control + Option + T) to disable trapping.")
-                                    .font(.caption)
+                                Text("All mouse input is being sent to the remote device.\nMouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to stop forwarding mouse input.")
+                                    .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
                             } else {
-                                Text("Click in this area to trap mouse and send input to the remote device")
-                                    .font(.caption)
+                                Text("Click the button below to start forwarding mouse input to the remote device.\nNote: Mouse will be trapped in this area. To exit forwarding mode, press ⌃⌥T (Control + Option + T)")
+                                    .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
+                                
+                                Button(action: {
+                                    viewModel.isMouseTrapped = true
+                                }) {
+                                    Text("Start Forwarding Mouse")
+                                        .padding(.horizontal, 20)
+                                        .padding(.vertical, 8)
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .cornerRadius(8)
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.top, 8)
                             }
                         }
                         .padding()
+                        .frame(maxWidth: .infinity)
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(10)
                     }
                     .padding()
+                    
+                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .frameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView"))
-                .border(viewModel.isMouseTrapped ? Color.green : Color.clear, width: 2)
-                .contentShape(Rectangle())
-                .simultaneousGesture(
-                    TapGesture()
-                        .onEnded { _ in
-                            if !viewModel.isMouseTrapped {
-                                viewModel.isMouseTrapped = true
-                            }
-                        }
-                )
+                .border(viewModel.isMouseTrapped ? Color.red : Color.clear, width: 2)
             } else {
                 // Device scanning and connection interface when not connected
                 VStack(spacing: 20) {
@@ -376,8 +370,13 @@ struct ContentView: View {
     private var statusText: some View {
         Group {
             if viewModel.bleService.connectionState == .ready {
-                Text("Ready")
-                    .foregroundColor(.green)
+                if viewModel.isMouseTrapped {
+                    Text("Forwarding Mouse Input")
+                        .foregroundColor(.primary)
+                } else {
+                    Text("Mouse Input Forwarding Paused")
+                        .foregroundColor(.orange)
+                }
             } else if !viewModel.bleService.isPoweredOn {
                 Text("Bluetooth Off")
                     .foregroundColor(.red)
