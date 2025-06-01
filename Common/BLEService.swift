@@ -8,11 +8,13 @@ public class BLEService: NSObject {
     var devicePeripheral: CBPeripheral?
     private var keyboardCharacteristic: CBCharacteristic?
     private var mouseCharacteristic: CBCharacteristic?
+    private var statusCharacteristic: CBCharacteristic?
     
     // Custom UUIDs for the service and characteristics
     let SERVICE_UUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
     let KEYBOARD_CHAR_UUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a8")
     let MOUSE_CHAR_UUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a9")
+    let STATUS_CHAR_UUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26aa")
     
     // Device tracking
     private var deviceLastSeen: [UUID: Date] = [:]
@@ -22,6 +24,7 @@ public class BLEService: NSObject {
         case disconnected
         case connecting
         case connected
+        case pairing
         case ready
     }
     
@@ -35,11 +38,6 @@ public class BLEService: NSObject {
         super.init()
         Logger.bleService.trace("Initializing")
         centralManager = CBCentralManager(delegate: self, queue: nil)
-        
-        // Start timer to check for stale devices
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            self?.removeStaleDevices()
-        }
     }
     
     private func removeStaleDevices() {
@@ -132,6 +130,7 @@ extension BLEService: CBCentralManagerDelegate {
         devicePeripheral = nil
         keyboardCharacteristic = nil
         mouseCharacteristic = nil
+        statusCharacteristic = nil
         connectionState = .disconnected
     }
     
@@ -149,22 +148,64 @@ extension BLEService: CBCentralManagerDelegate {
 // MARK: - CBPeripheralDelegate
 extension BLEService: CBPeripheralDelegate {
     public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        if let error = error {
+            Logger.bleService.trace("Error discovering services: \(error.localizedDescription)")
+            return
+        }
+        
         guard let service = peripheral.services?.first else { return }
         Logger.bleService.trace("Discovered service: \(service.uuid)")
-        peripheral.discoverCharacteristics([KEYBOARD_CHAR_UUID, MOUSE_CHAR_UUID], for: service)
+        connectionState = .pairing
+        peripheral.discoverCharacteristics([KEYBOARD_CHAR_UUID, MOUSE_CHAR_UUID, STATUS_CHAR_UUID], for: service)
     }
     
     public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        if let error = error {
+            Logger.bleService.trace("Error discovering characteristics: \(error.localizedDescription)")
+            return
+        }
+        
         for characteristic in service.characteristics ?? [] {
             Logger.bleService.trace("Discovered characteristic: \(characteristic.uuid)")
             if characteristic.uuid == KEYBOARD_CHAR_UUID {
                 keyboardCharacteristic = characteristic
             } else if characteristic.uuid == MOUSE_CHAR_UUID {
                 mouseCharacteristic = characteristic
+            } else if characteristic.uuid == STATUS_CHAR_UUID {
+                statusCharacteristic = characteristic
+                // Try to read the status characteristic to check secure pairing
+                peripheral.readValue(for: characteristic)
             }
         }
-        if keyboardCharacteristic != nil && mouseCharacteristic != nil {
-            connectionState = .ready
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        if characteristic.uuid == STATUS_CHAR_UUID {
+            if error == nil {
+                // If we can read the status characteristic without error, secure pairing is complete
+                if keyboardCharacteristic != nil && mouseCharacteristic != nil {
+                    connectionState = .ready
+                }
+            } else {
+                // Log error when reading status characteristic
+                Logger.bleService.trace("Error reading status characteristic: \(error?.localizedDescription ?? "unknown error")")
+                // Abort connection and return to scanning
+                disconnect()
+            }
+        }
+    }
+    
+    public func peripheral(_ peripheral: CBPeripheral, didUpdateNotificationStateFor characteristic: CBCharacteristic, error: Error?) {
+        if characteristic.uuid == STATUS_CHAR_UUID {
+            if error == nil {
+                // If we can enable notifications without error, secure pairing is complete
+                if keyboardCharacteristic != nil && mouseCharacteristic != nil {
+                    connectionState = .ready
+                }
+            } else {
+                // Any error means we're still in pairing
+                connectionState = .pairing
+            }
         }
     }
 }

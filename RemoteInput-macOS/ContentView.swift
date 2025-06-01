@@ -38,6 +38,9 @@ struct ContentView: View {
             case .disconnected:
                 // Don't automatically start scanning on disconnect
                 break
+            case .pairing:
+                // Keep scanning while pairing is in progress
+                break
             }
         }
         .onChange(of: viewModel.isMouseTrapped) { oldValue, newValue in
@@ -191,6 +194,7 @@ struct ContentView: View {
                             VStack(spacing: 16) {
                                 Image(systemName: "antenna.radiowaves.left.and.right.slash")
                                     .font(.system(size: 40))
+                                    .frame(width: 40, height: 40)
                                     .foregroundColor(.red)
                                 Text("Bluetooth is turned off")
                                     .font(.headline)
@@ -219,6 +223,7 @@ struct ContentView: View {
                             VStack(spacing: 16) {
                                 Image(systemName: "arrow.triangle.2.circlepath")
                                     .font(.system(size: 40))
+                                    .frame(width: 40, height: 40)
                                     .foregroundColor(.blue)
                                     .rotationEffect(.degrees(viewModel.bleService.isScanning ? 360 : 0))
                                     .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: viewModel.bleService.isScanning)
@@ -249,6 +254,7 @@ struct ContentView: View {
                             VStack(spacing: 16) {
                                 Image(systemName: "link.circle")
                                     .font(.system(size: 40))
+                                    .frame(width: 40, height: 40)
                                     .foregroundColor(.orange)
                                 Text("Connecting to device...")
                                     .font(.headline)
@@ -261,10 +267,28 @@ struct ContentView: View {
                             .frame(maxWidth: .infinity)
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(10)
+                        } else if viewModel.bleService.connectionState == .pairing {
+                            VStack(spacing: 16) {
+                                Image(systemName: "lock.shield")
+                                    .font(.system(size: 40))
+                                    .frame(width: 40, height: 40)
+                                    .foregroundColor(.orange)
+                                Text("Establishing secure connection...")
+                                    .font(.headline)
+                                Text("Please accept the pairing request on your device")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
                         } else {
                             VStack(spacing: 16) {
                                 Image(systemName: "antenna.radiowaves.left.and.right")
                                     .font(.system(size: 40))
+                                    .frame(width: 40, height: 40)
                                     .foregroundColor(.blue)
                                 Text("Ready to connect")
                                     .font(.headline)
