@@ -6,17 +6,22 @@ struct FrameReader: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-        .background {
-            GeometryReader { geometryValue in
-                let frame = geometryValue.frame(in: coordinateSpace)
-                Color.clear
-                .onAppear {
-                    self.frame = frame
+            .background(
+                GeometryReader { geometry in
+                    Color.clear
+                        .onAppear {
+                            frame = geometry.frame(in: coordinateSpace)
+                        }
+                        .onChange(of: geometry.frame(in: coordinateSpace)) { oldValue, newValue in
+                            frame = newValue
+                        }
                 }
-                .onChange(of: frame) { oldValue, newValue in
-                    self.frame = newValue
-                }
-            }
-        }
+            )
+    }
+}
+
+extension View {
+    func frameReader(frame: Binding<CGRect>, coordinateSpace: CoordinateSpace) -> some View {
+        modifier(FrameReader(frame: frame, coordinateSpace: coordinateSpace))
     }
 }
