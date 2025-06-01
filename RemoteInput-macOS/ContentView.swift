@@ -133,22 +133,66 @@ struct ContentView: View {
                 VStack(spacing: 20) {
                     VStack(spacing: 10) {
                         VStack(spacing: 16) {
+                            Image(systemName: "keyboard")
+                                .font(.system(size: 40))
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.blue)
+                            
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(viewModel.isKeyboardForwardingEnabled || viewModel.isMouseTrapped ? Color.green : Color.yellow)
+                                    .frame(width: 8, height: 8)
+                                
+                                Text(viewModel.isKeyboardForwardingEnabled || viewModel.isMouseTrapped ? 
+                                    "Keyboard input forwarding is active" : 
+                                    "Keyboard input forwarding is paused")
+                                    .foregroundColor(.primary)
+                            }
+                            .font(.headline)
+                                
+                            if (!viewModel.isMouseTrapped) {
+                                Text("Use toggle below to enable forwarding of keyboard input to the remote device.")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+
+                                Toggle(isOn: $viewModel.isKeyboardForwardingEnabled) {
+                                    Text("Keyboard Forwarding")
+                                }
+                                .toggleStyle(.switch)                                
+                            }
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.gray.opacity(0.1))
+                        .cornerRadius(10)
+                    }
+                    .padding()
+
+                    VStack(spacing: 10) {
+                        VStack(spacing: 16) {
                             Image(systemName: "cursorarrow.motionlines")
                                 .font(.system(size: 40))
                                 .frame(width: 40, height: 40)
-                                .foregroundColor(viewModel.isMouseTrapped ? .blue : .gray)
+                                .foregroundColor(.blue)
                             
-                            Text(viewModel.isMouseTrapped ? "Mouse input forwarding is active" : "Mouse input forwarding is paused")
-                                .foregroundColor(.primary)
-                                .font(.headline)
+                            HStack(spacing: 8) {
+                                Circle()
+                                    .fill(viewModel.isMouseTrapped ? Color.green : Color.yellow)
+                                    .frame(width: 8, height: 8)
+                                
+                                Text(viewModel.isMouseTrapped ? "Mouse input forwarding is active" : "Mouse input forwarding is paused")
+                                    .foregroundColor(.primary)
+                            }
+                            .font(.headline)
                                                             
                             if viewModel.isMouseTrapped {
-                                Text("All mouse input is being sent to the remote device.\nMouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to stop forwarding mouse input.")
+                                Text("Mouse is trapped in this area. Press ⌃⌥T (Control + Option + T) to exit forwarding mode.")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
                             } else {
-                                Text("Click the button below to start forwarding mouse input to the remote device.\nNote: Mouse will be trapped in this area. To exit forwarding mode, press ⌃⌥T (Control + Option + T)")
+                                Text("Click the button below to start forwarding of both - mouse and keyboard input to the remote device.")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                                     .multilineTextAlignment(.center)
@@ -156,7 +200,7 @@ struct ContentView: View {
                                 Button(action: {
                                     viewModel.isMouseTrapped = true
                                 }) {
-                                    Text("Start Forwarding Mouse")
+                                    Text("Start Forwarding")
                                         .padding(.horizontal, 20)
                                         .padding(.vertical, 8)
                                         .background(Color.blue)
@@ -175,42 +219,10 @@ struct ContentView: View {
                     }
                     .padding()
 
-                    VStack(spacing: 10) {
-                        VStack(spacing: 16) {
-                            Image(systemName: "keyboard")
-                                .font(.system(size: 40))
-                                .frame(width: 40, height: 40)
-                                .foregroundColor(viewModel.isKeyboardForwardingEnabled || viewModel.isMouseTrapped ? .blue : .gray)
-                            
-                            Text(viewModel.isKeyboardForwardingEnabled || viewModel.isMouseTrapped ? 
-                                "Keyboard input forwarding is active" : 
-                                "Keyboard input forwarding is paused")
-                                .font(.headline)
-                                
-                            if (!viewModel.isMouseTrapped) {
-                                Text("Use toggle below to enable forwarding of keyboard input to the remote device when mouse input is not being forwarded")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-
-                                Toggle(isOn: $viewModel.isKeyboardForwardingEnabled) {
-                                    Text("Independent Keyboard Forwarding")
-                                }
-                                .toggleStyle(.switch)                                
-                            }
-                        }
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(10)
-                    }
-                    .padding()
-
                     Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .frameReader(frame: $viewModel.mainContentViewFrame, coordinateSpace: .named("contentView"))
-                .border(viewModel.isMouseTrapped ? Color.red : Color.clear, width: 2)
             } else {
                 // Device scanning and connection interface when not connected
                 VStack(spacing: 20) {
