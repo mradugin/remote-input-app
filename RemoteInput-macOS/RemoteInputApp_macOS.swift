@@ -32,6 +32,20 @@ struct RemoteInputApp: App {
         .windowStyle(.hiddenTitleBar)
         .commands {
             SidebarCommands()
+            CommandGroup(replacing: .appInfo) {
+                Button("About Remote Input") {
+                    NSApplication.shared.orderFrontStandardAboutPanel(
+                        options: [
+                            NSApplication.AboutPanelOptionKey.applicationName: "Remote Input",
+                            NSApplication.AboutPanelOptionKey.applicationVersion: "1.0",
+                            NSApplication.AboutPanelOptionKey.credits: NSAttributedString(
+                                string: "Remote Input allows you to control remote computers using a Bluetooth dongle.\n\n" +
+                                       "© 2025 Maxim Radugin. All rights reserved.\nhttp://radugin.com"
+                            )
+                        ]
+                    )
+                }
+            }
         }
     }
 }
