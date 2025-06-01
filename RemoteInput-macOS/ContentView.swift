@@ -58,7 +58,7 @@ struct ContentView: View {
                 if !viewModel.bleService.isPoweredOn {
                     Text("Bluetooth is off")
                         .foregroundColor(.secondary)
-                } else if let connectedDevice = viewModel.bleService.devicePeripheral {
+                } else if viewModel.bleService.connectionState == .ready, let connectedDevice = viewModel.bleService.devicePeripheral {
                     DeviceRow(device: connectedDevice,
                             isConnected: true,
                             onConnect: { viewModel.connectToDevice(connectedDevice) },
@@ -317,7 +317,8 @@ struct ContentView: View {
                     }
                     .padding()
                     
-                    if !viewModel.bleService.discoveredDevices.isEmpty {
+                    if !viewModel.bleService.discoveredDevices.isEmpty && 
+                       ![.connecting, .connected, .pairing, .ready].contains(viewModel.bleService.connectionState) {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("Available Devices")
                                 .font(.headline)
