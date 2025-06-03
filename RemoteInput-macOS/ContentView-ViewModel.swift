@@ -15,10 +15,8 @@ extension ContentView {
         var bleService: BLEService
         var reportController: ReportController
         
-        var ignoreNextMouseMove = false
         var isMouseTrapped = false
         var mainContentViewFrame: CGRect = .zero
-        var lastMoveCoords: CGPoint = .zero
         
         var isKeyboardForwardingEnabled = false
         
@@ -107,18 +105,8 @@ extension ContentView {
             return event
         }
 
-        func moveMouse(to point: CGPoint) {
-            CGWarpMouseCursorPosition(point)
-            CGAssociateMouseAndMouseCursorPosition(1)
-            ignoreNextMouseMove = true
-        }
-
         private func handleMouseEvent(_ event: NSEvent) {
             Logger.contentViewViewModel.trace("Handling mouse event: \(event.type.rawValue), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
-            if ignoreNextMouseMove {
-                ignoreNextMouseMove = false
-                return
-            }
             if isMouseTrapped {
                 // Check if mouse is within the main content area
                 guard let window = NSApp.windows.first(where: { $0.isKeyWindow }) else {
@@ -132,9 +120,10 @@ extension ContentView {
                 let originY = NSScreen.screens[0].frame.maxY - window.frame.maxY
                 var mainContentCenterInScreenCoords = window.convertPoint(toScreen: NSPoint(x: frame.midX, y: 0))
                 mainContentCenterInScreenCoords.y = originY + mainContentViewFrame.midY
-                moveMouse(to: mainContentCenterInScreenCoords)
                 
                 reportController.reportMouseEvent(event)
+
+                CGWarpMouseCursorPosition(mainContentCenterInScreenCoords)
             }
             return
         }
