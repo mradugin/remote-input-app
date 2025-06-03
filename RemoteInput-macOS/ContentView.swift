@@ -34,7 +34,7 @@ struct ContentView: View {
             case .connected, .ready:
                 viewModel.bleService.stopScanning()
             case .disconnected:
-                // Don't automatically start scanning on disconnect
+                viewModel.isMouseTrapped = false
                 break
             case .pairing:
                 // Keep scanning while pairing is in progress
