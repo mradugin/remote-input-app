@@ -11,11 +11,11 @@ public class BLEService: NSObject {
     private var statusCharacteristic: CBCharacteristic?
     
     // Custom UUIDs for the service and characteristics
-    let SERVICE_UUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
-    let KEYBOARD_CHAR_UUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a8")
-    let MOUSE_CHAR_UUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a9")
-    let STATUS_CHAR_UUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26aa")
-    
+    let SERVICE_UUID            = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
+    let KEYBOARD_CHAR_UUID      = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a8")
+    let MOUSE_CHAR_UUID         = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a9")
+    let STATUS_CHAR_UUID        = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26aa")
+   
     // Device tracking
     private var deviceLastSeen: [UUID: Date] = [:]
     private let deviceTimeout: TimeInterval = 5.0 // Remove device after 5 seconds of not being seen
@@ -173,9 +173,12 @@ extension BLEService: CBPeripheralDelegate {
                 mouseCharacteristic = characteristic
             } else if characteristic.uuid == STATUS_CHAR_UUID {
                 statusCharacteristic = characteristic
-                // Try to read the status characteristic to check secure pairing
-                peripheral.readValue(for: characteristic)
-            }
+             }
+        }
+
+        if (statusCharacteristic != nil) {
+            // Try to read the status characteristic to check secure pairing
+            peripheral.readValue(for: statusCharacteristic!)
         }
     }
     

@@ -2,12 +2,8 @@ import SwiftUI
 import CoreGraphics
 import OSLog
 import CoreBluetooth
-#if os(iOS)
-import UIKit
-#else
 import AppKit
 import Carbon.HIToolbox.Events
-#endif
 
 extension ContentView {
     @Observable
