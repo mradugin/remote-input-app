@@ -15,10 +15,11 @@ public class BLEService: NSObject {
     let KEYBOARD_CHAR_UUID      = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a8")
     let MOUSE_CHAR_UUID         = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a9")
     let STATUS_CHAR_UUID        = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26aa")
-   
+    
     // Device tracking
     private var deviceLastSeen: [UUID: Date] = [:]
     private let deviceTimeout: TimeInterval = 5.0 // Remove device after 5 seconds of not being seen
+    private var staleDeviceTimer: Timer?
     
     enum ConnectionState {
         case disconnected
@@ -38,6 +39,19 @@ public class BLEService: NSObject {
         super.init()
         Logger.bleService.trace("Initializing")
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        startStaleDeviceTimer()
+    }
+    
+    deinit {
+        staleDeviceTimer?.invalidate()
+        staleDeviceTimer = nil
+    }
+    
+    private func startStaleDeviceTimer() {
+        // Check for stale devices every second
+        staleDeviceTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.removeStaleDevices()
+        }
     }
     
     private func removeStaleDevices() {
@@ -173,7 +187,7 @@ extension BLEService: CBPeripheralDelegate {
                 mouseCharacteristic = characteristic
             } else if characteristic.uuid == STATUS_CHAR_UUID {
                 statusCharacteristic = characteristic
-             }
+            }
         }
 
         if (statusCharacteristic != nil) {
