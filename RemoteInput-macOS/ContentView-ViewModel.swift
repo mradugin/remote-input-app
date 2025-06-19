@@ -67,7 +67,7 @@ extension ContentView {
         }
         
         private func handleModifierEvent(_ event: NSEvent) -> NSEvent? {
-            Logger.contentViewViewModel.trace("Handling modifier event: \(event.type.rawValue), modifierFlags: \(event.modifierFlags.rawValue)")
+            Logger.events.trace("Handling modifier event: \(event.type.rawValue, privacy: .private), modifierFlags: \(event.modifierFlags.rawValue, privacy: .private)")
             if isKeyboardForwardingEnabled || isMouseTrapped {
                 reportController.reportKeyboardEvent(event.modifierFlags, true, nil)
                 return nil
@@ -76,7 +76,7 @@ extension ContentView {
         }
         
         private func handleKeyboardEvent(_ event: NSEvent) -> NSEvent? {
-            Logger.contentViewViewModel.trace("Handling keyboard event: \(event.type.rawValue), keycode: \(event.keyCode), modifierFlags: \(event.modifierFlags.rawValue)")
+            Logger.events.trace("Handling keyboard event: \(event.type.rawValue, privacy: .private), keycode: \(event.keyCode, privacy: .private), modifierFlags: \(event.modifierFlags.rawValue, privacy: .private)")
 
             // Check for Control+Option+T to toggle mouse trapping
             if event.type == .keyDown && 
@@ -102,7 +102,7 @@ extension ContentView {
         }
 
         private func handleMouseEvent(_ event: NSEvent) {
-            Logger.contentViewViewModel.trace("Handling mouse event: \(event.type.rawValue), buttons: \(NSEvent.pressedMouseButtons), dx: \(event.deltaX), dy: \(event.deltaY)")
+            Logger.events.trace("Handling mouse event: \(event.type.rawValue, privacy: .private), buttons: \(NSEvent.pressedMouseButtons, privacy: .private), dx: \(event.deltaX, privacy: .private), dy: \(event.deltaY, privacy: .private)")
             if isMouseTrapped {
                 // Check if mouse is within the main content area
                 guard let window = NSApp.windows.first(where: { $0.isKeyWindow }) else {

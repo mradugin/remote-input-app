@@ -60,10 +60,9 @@ public class ReportController {
         if keydown, let keyCode = keyCode {
             if let usbKeyCode = KeyMapping.getKeyCode(fromEvent: keyCode) {
                 report[1] = usbKeyCode
-                Logger.reportController.trace("Usb key code: \(usbKeyCode)")
             }
             else {
-                Logger.reportController.warning("No usb key code found for keycode: \(keyCode)")
+                Logger.reportController.warning("No usb key code found for keycode: \(keyCode, privacy: .private)")
                 return
             }
         }

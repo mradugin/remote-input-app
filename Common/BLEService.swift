@@ -152,7 +152,7 @@ extension BLEService: CBCentralManagerDelegate {
         guard devicePeripheral == peripheral else { return }
         Logger.bleService.trace("Failed to connect to peripheral: \(peripheral.identifier)")
         if let error = error {
-            Logger.bleService.trace("Error: \(error.localizedDescription)")
+            Logger.bleService.error("Error: \(error.localizedDescription)")
         }
         devicePeripheral = nil
         connectionState = .disconnected
@@ -163,7 +163,7 @@ extension BLEService: CBCentralManagerDelegate {
 extension BLEService: CBPeripheralDelegate {
     public func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let error = error {
-            Logger.bleService.trace("Error discovering services: \(error.localizedDescription)")
+            Logger.bleService.error("Error discovering services: \(error.localizedDescription)")
             return
         }
         
@@ -175,7 +175,7 @@ extension BLEService: CBPeripheralDelegate {
     
     public func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let error = error {
-            Logger.bleService.trace("Error discovering characteristics: \(error.localizedDescription)")
+            Logger.bleService.error("Error discovering characteristics: \(error.localizedDescription)")
             return
         }
         
@@ -205,7 +205,7 @@ extension BLEService: CBPeripheralDelegate {
                 }
             } else {
                 // Log error when reading status characteristic
-                Logger.bleService.trace("Error reading status characteristic: \(error?.localizedDescription ?? "unknown error")")
+                Logger.bleService.error("Error reading status characteristic: \(error?.localizedDescription ?? "unknown error")")
                 // Abort connection and return to scanning
                 disconnect()
             }
