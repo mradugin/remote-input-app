@@ -78,7 +78,7 @@ struct KeyboardInputView: View {
             Key(label: "0", shiftedLabel: ")", keyCode: HIDKeyCodes.Key0, width: 1, height: 1, modifier: nil),
             Key(label: "-", shiftedLabel: "_", keyCode: HIDKeyCodes.Minus, width: 1, height: 1, modifier: nil),
             Key(label: "=", shiftedLabel: "+", keyCode: HIDKeyCodes.Equal, width: 1, height: 1, modifier: nil),
-            Key(label: "delete", keyCode: HIDKeyCodes.Backspace, width: 1.5, height: 1, modifier: nil)
+            Key(label: "⌫", keyCode: HIDKeyCodes.Backspace, width: 1.5, height: 1, modifier: nil)
         ],
         [
             Key(label: "tab", keyCode: HIDKeyCodes.Tab, width: 1.5, height: 1, modifier: nil),
@@ -97,7 +97,7 @@ struct KeyboardInputView: View {
             Key(label: "\\", shiftedLabel: "|", keyCode: HIDKeyCodes.Backslash, width: 1.5, height: 1, modifier: nil)
         ],
         [
-            Key(label: "caps", keyCode: HIDKeyCodes.CapsLock, width: 1.75, height: 1, modifier: nil),
+            Key(label: "⇪", keyCode: HIDKeyCodes.CapsLock, width: 1.75, height: 1, modifier: nil),
             Key(label: "a", shiftedLabel: "A", keyCode: HIDKeyCodes.A, width: 1, height: 1, modifier: nil),
             Key(label: "s", shiftedLabel: "S", keyCode: HIDKeyCodes.S, width: 1, height: 1, modifier: nil),
             Key(label: "d", shiftedLabel: "D", keyCode: HIDKeyCodes.D, width: 1, height: 1, modifier: nil),
@@ -109,7 +109,7 @@ struct KeyboardInputView: View {
             Key(label: "l", shiftedLabel: "L", keyCode: HIDKeyCodes.L, width: 1, height: 1, modifier: nil),
             Key(label: ";", shiftedLabel: ":", keyCode: HIDKeyCodes.Semicolon, width: 1, height: 1, modifier: nil),
             Key(label: "'", shiftedLabel: "\"", keyCode: HIDKeyCodes.Apostrophe, width: 1, height: 1, modifier: nil),
-            Key(label: "return", keyCode: HIDKeyCodes.Enter, width: 1.75, height: 1, modifier: nil)
+            Key(label: "↵", keyCode: HIDKeyCodes.Enter, width: 1.75, height: 1, modifier: nil)
         ],
         [
             Key(label: "⇧", keyCode: HIDKeyCodes.LeftShift, width: 2.25, height: 1, modifier: .shift),
