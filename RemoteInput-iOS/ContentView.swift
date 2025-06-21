@@ -104,6 +104,12 @@ struct ContentView: View {
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
+                        } else if viewModel.bleService.connectionState == .pairing {
+                            Text("Establishing secure connection...")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal)
                         } else {
                             Text("Remote Input Dongle has been disconnected")
                                 .font(.caption)
@@ -135,6 +141,9 @@ struct ContentView: View {
                     .foregroundColor(.yellow)
             } else if [.connecting, .connected].contains(viewModel.bleService.connectionState) {
                 Text("Connecting...")
+                    .foregroundColor(.orange)
+            } else if viewModel.bleService.connectionState == .pairing {
+                Text("Pairing...")
                     .foregroundColor(.orange)
             } else {
                 Text("Disconnected")
