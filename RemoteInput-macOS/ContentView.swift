@@ -53,17 +53,20 @@ struct ContentView: View {
     private var sidebarContent: some View {
         List {
             Section(header: Text("Device")) {
-                if !viewModel.bleService.isPoweredOn {
-                    Text("Bluetooth is off")
-                        .foregroundColor(.secondary)
-                } else if viewModel.bleService.connectionState == .ready, let connectedDevice = viewModel.bleService.devicePeripheral {
+                if viewModel.bleService.connectionState == .ready, let connectedDevice = viewModel.bleService.devicePeripheral {
                     DeviceRow(device: connectedDevice,
                             isConnected: true,
                             onConnect: { viewModel.connectToDevice(connectedDevice) },
                             onDisconnect: { viewModel.disconnectFromDevice() })
                 } else {
-                    Text("No device connected")
-                        .foregroundColor(.secondary)
+                    HStack(spacing: 4) {
+                        Image(systemName: "circle.slash")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                        Text("No device connected")
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 4)
                 }
             }
 
