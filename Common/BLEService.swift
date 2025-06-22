@@ -11,10 +11,10 @@ public class BLEService: NSObject {
     private var statusCharacteristic: CBCharacteristic?
     
     // Custom UUIDs for the service and characteristics
-    let SERVICE_UUID            = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
-    let KEYBOARD_CHAR_UUID      = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a8")
-    let MOUSE_CHAR_UUID         = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a9")
-    let STATUS_CHAR_UUID        = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26aa")
+    let SERVICE_UUID            = CBUUID(string: "aa8713fe-6f22-4820-9edd-e8462b0762ea")
+    let KEYBOARD_CHAR_UUID      = CBUUID(string: "9eeba577-04b8-4dc6-aeef-a9ac12eddb68")
+    let MOUSE_CHAR_UUID         = CBUUID(string: "9eeba577-04b8-4dc6-aeef-a9ac12eddb69")
+    let STATUS_CHAR_UUID        = CBUUID(string: "9eeba577-04b8-4dc6-aeef-a9ac12eddb6a")
     
     // Device tracking
     private var deviceLastSeen: [UUID: Date] = [:]
