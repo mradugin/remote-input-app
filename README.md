@@ -28,7 +28,7 @@ I use the [ESP32-S3-Zero](https://www.waveshare.com/wiki/ESP32-S3-Zero) with a 3
 ### Building from Source
 
 ```bash
-git clone https://github.com/mradugin/remote-input-app
+git clone https://github.com/mradugin/remote-input-app.git
 cd remote-input-app
 open RemoteInput.xcodeproj
 ```
